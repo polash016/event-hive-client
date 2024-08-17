@@ -1,4 +1,6 @@
+import assets from "@/assets";
 import { Box, Button, Stack, Typography } from "@mui/material";
+import Image from "next/image";
 import Link from "next/link";
 
 const NavBar = () => {
@@ -11,12 +13,21 @@ const NavBar = () => {
         justifyContent="space-between"
         alignItems="center"
       >
-        <Typography variant="h5" component="h1" fontWeight={600}>
-          Event{" "}
-          <Box component="span" color="primary.main">
-            Hive
-          </Box>
-        </Typography>
+        <Stack direction="row" gap={2}>
+          <Typography component={Link} href="/" fontWeight={600} variant="h5">
+            <Image
+              src={assets.logo.navBar_logo}
+              width={200}
+              height={80}
+              alt="logo"
+            ></Image>
+
+            {/* Event{" "}
+            <Box component="span" color="primary.main">
+              Hive
+            </Box> */}
+          </Typography>
+        </Stack>
         <Stack direction="row" gap={4} justifyContent="space-between">
           <Typography component={Link} href="/home" color="white">
             Home
