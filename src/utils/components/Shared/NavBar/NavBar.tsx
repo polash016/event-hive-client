@@ -1,17 +1,36 @@
+"use client";
 import assets from "@/assets";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import {
+  Button,
+  Slide,
+  Stack,
+  Typography,
+  useScrollTrigger,
+} from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 
+function useScrollDirectionTrigger() {
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 0,
+  });
+
+  return trigger;
+}
+
 const NavBar = () => {
+  const trigger = useScrollDirectionTrigger();
+
   return (
-    <div>
+    <Slide appear={false} direction="down" in={!trigger}>
       <Stack
         py={4}
         px={1}
         direction="row"
         justifyContent="space-between"
         alignItems="center"
+        bgcolor="#202030"
       >
         <Stack direction="row" gap={2}>
           <Typography component={Link} href="/" fontWeight={600} variant="h5">
@@ -48,7 +67,7 @@ const NavBar = () => {
           </Button>
         </Stack>
       </Stack>
-    </div>
+    </Slide>
   );
 };
 export default NavBar;
