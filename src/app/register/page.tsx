@@ -32,7 +32,7 @@ export const registerValidation = z.object({
     gender: z.enum(["MALE", "FEMALE", "OTHERS"], {
       errorMap: () => ({ message: "Gender is required" }),
     }),
-    contactNumber: z.string().regex(/^d{11}$/, "Please enter a valid number"),
+    contactNumber: z.string().regex(/^\d{11}$/, "Please enter a valid number"),
   }),
 });
 
@@ -60,20 +60,25 @@ const Register = () => {
     const postData = modifyPayload(data, selectedFile);
     console.log(postData);
 
-    try {
-      const res = await registerAttendee(postData);
+    const res = registerAttendee(postData);
 
-      console.log(res);
-      if (res?.data?.id) {
-        toast.success(res.message);
-        router.push("/login");
-      } else {
-        toast.error(res.message);
-      }
-    } catch (error: any) {
-      console.log(error.message);
-      toast.error(error?.message);
-    }
+    toast.promise(res, {
+      loading: "Loading...",
+      success: (res: any) => {
+        console.log(res);
+
+        if (res?.data?.id) {
+          router.push("/login");
+          return res.message;
+        } else {
+          return res.message;
+        }
+      },
+      error: (error: any) => {
+        console.log(error.message);
+        return error?.message || "Registration failed";
+      },
+    });
   };
 
   return (

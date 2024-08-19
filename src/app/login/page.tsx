@@ -31,24 +31,46 @@ const Login = () => {
 
   const handleLogin = async (data: FieldValues) => {
     console.log(data);
-    try {
-      const res = await loginUser(data);
 
-      console.log(res);
+    const res = loginUser(data);
 
-      if (res?.data?.accessToken) {
-        storeUserInfo(res.data.accessToken);
+    toast.promise(res, {
+      loading: "Logging in...",
+      success: (res: any) => {
+        console.log(res);
 
-        toast.success(res.message);
+        if (res?.data?.accessToken) {
+          storeUserInfo(res.data.accessToken);
+          router.push("/");
+          return res.message;
+        } else {
+          return res.message;
+        }
+      },
+      error: (error: any) => {
+        console.log(error.message);
+        return error?.message || "Login failed";
+      },
+    });
 
-        router.push("/");
-      } else {
-        toast.error(res.message);
-      }
-    } catch (error: any) {
-      toast.error(error.message);
-      console.log(error.message);
-    }
+    // try {
+    //   const res = await loginUser(data);
+
+    //   console.log(res);
+
+    //   if (res?.data?.accessToken) {
+    //     storeUserInfo(res.data.accessToken);
+
+    //     toast.success(res.message);
+
+    //     router.push("/");
+    //   } else {
+    //     toast.error(res.message);
+    //   }
+    // } catch (error: any) {
+    //   toast.error(error.message);
+    //   console.log(error.message);
+    // }
   };
 
   return (
