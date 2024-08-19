@@ -1,14 +1,9 @@
 "use client";
 import assets from "@/assets";
-import {
-  Button,
-  Slide,
-  Stack,
-  Typography,
-  useScrollTrigger,
-} from "@mui/material";
+import { Slide, Stack, Typography, useScrollTrigger } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 
 function useScrollDirectionTrigger() {
   const trigger = useScrollTrigger({
@@ -21,6 +16,10 @@ function useScrollDirectionTrigger() {
 
 const NavBar = () => {
   const trigger = useScrollDirectionTrigger();
+
+  const AuthButton = dynamic(() => import("../../ui/AuthButton/AuthButton"), {
+    ssr: false,
+  });
 
   return (
     <Slide appear={false} direction="down" in={!trigger}>
@@ -62,9 +61,16 @@ const NavBar = () => {
           </Typography>
         </Stack>
         <Stack>
-          <Button component={Link} href="/login">
-            Login
-          </Button>
+          {/* {isLogged ? (
+            <Button onClick={handleLogOut} sx={{ textTransform: "none" }}>
+              Log Out
+            </Button>
+          ) : (
+            <Button component={Link} href="/login">
+              Login
+            </Button>
+          )} */}
+          <AuthButton />
         </Stack>
       </Stack>
     </Slide>
