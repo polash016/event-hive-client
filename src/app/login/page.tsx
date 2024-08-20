@@ -41,7 +41,7 @@ const Login = () => {
 
         if (res?.data?.accessToken) {
           storeUserInfo(res.data.accessToken);
-          router.push("/");
+          router.push("/dashboard");
           return res.message;
         } else {
           return res.message;
@@ -157,7 +157,12 @@ const Login = () => {
 
             <Typography component="p">
               Need an account?{" "}
-              <Link href="/register" className="text-blue-500">
+              <Link
+                href="/register"
+                style={{
+                  color: "mediumblue",
+                }}
+              >
                 Register
               </Link>
             </Typography>

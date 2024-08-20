@@ -182,7 +182,12 @@ const Register = () => {
             </EHForm>
             <Typography component="p">
               Already have an account?{" "}
-              <Link href="/login" className="text-blue-500">
+              <Link
+                href="/login"
+                style={{
+                  color: "mediumblue",
+                }}
+              >
                 Login
               </Link>
             </Typography>

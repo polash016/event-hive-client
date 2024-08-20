@@ -7,6 +7,7 @@ const assets = {
     navBar_logo: require("./icons/logo.png"),
     tab_icon: require("./icons/tabIcon.png"),
     login_icon: require("./icons/loginIcon.png"),
+    dash_logo: require("./icons/dash_logo.png"),
   },
 };
 
