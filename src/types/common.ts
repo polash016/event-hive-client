@@ -17,3 +17,19 @@ export interface INavbarItem {
   icon?: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string };
   child?: INavbarItem[];
 }
+
+export interface ISuccessResponse {
+  data: any;
+  meta?: IMeta;
+}
+
+export interface IErrorResponse {
+  statusCode: number;
+  message: string;
+  errorMessages: IErrorMassage[];
+}
+
+interface IErrorMassage {
+  path: string;
+  message: string;
+}

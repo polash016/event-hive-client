@@ -14,11 +14,19 @@ interface IEHSelect {
   label: string;
   required?: boolean;
   fullWidth?: boolean;
+  size?: "small" | "medium";
   sx?: SxProps;
   options: { label: string; value: string }[];
 }
 
-const EHSelect = ({ name, label, fullWidth, sx, options }: IEHSelect) => {
+const EHSelect = ({
+  name,
+  label,
+  fullWidth,
+  sx,
+  options,
+  size = "small",
+}: IEHSelect) => {
   const { control } = useFormContext();
 
   return (
@@ -33,6 +41,7 @@ const EHSelect = ({ name, label, fullWidth, sx, options }: IEHSelect) => {
             labelId={`${name}-label`}
             label={label}
             error={!!error?.message}
+            size={size}
           >
             {options.map((option) => (
               <MenuItem key={option.value} value={option.value}>
