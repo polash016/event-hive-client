@@ -1,6 +1,7 @@
 "use client";
 import assets from "@/assets";
 import { registerAttendee } from "@/services/actions/registerAttendee";
+import EHFile from "@/utils/components/Forms/EHFile";
 import EHForm from "@/utils/components/Forms/EHForm";
 import EHInput from "@/utils/components/Forms/EHInput";
 import EHSelect from "@/utils/components/Forms/EHSelect";
@@ -24,7 +25,15 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+const fileSchema = z
+  .instanceof(File)
+  .refine((file) => file.size <= 5 * 1024 * 1024, {
+    message: "File size should be 5MB or less",
+  })
+  .optional();
+
 export const registerValidation = z.object({
+  file: fileSchema,
   password: z.string().min(6, "Password must be at least 6 characters"),
   attendee: z.object({
     name: z.string().min(1, "Please enter your name"),
@@ -48,17 +57,11 @@ export const defaultValues = {
 
 const Register = () => {
   const router = useRouter();
-  const [selectedFile, setSelectedFile] = useState(null);
-
-  const handleFileChange = (event: any) => {
-    setSelectedFile(event.target.files[0]);
-  };
 
   const handleRegister = async (data: FieldValues) => {
     console.log(data);
 
-    const postData = modifyPayload(data, selectedFile);
-    console.log(postData);
+    const postData = modifyPayload(data);
 
     const res = registerAttendee(postData);
 
@@ -154,9 +157,7 @@ const Register = () => {
                   />
                 </Grid>
                 <Grid item md={6}>
-                  <FormControl fullWidth>
-                    <Input type="file" hidden onChange={handleFileChange} />
-                  </FormControl>
+                  <EHFile label="Upload Photo" name="file" />
                 </Grid>
                 <Grid item md={6}>
                   <EHInput

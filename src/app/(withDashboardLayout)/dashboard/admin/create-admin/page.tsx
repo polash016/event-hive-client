@@ -34,26 +34,26 @@ const CreateAdmin = () => {
   const handleLogin = async (data: FieldValues) => {
     console.log(data);
 
-    const res = loginUser(data);
+    // const res = loginUser(data);
 
-    toast.promise(res, {
-      loading: "Logging in...",
-      success: (res: any) => {
-        console.log(res);
+    // toast.promise(res, {
+    //   loading: "Logging in...",
+    //   success: (res: any) => {
+    //     console.log(res);
 
-        if (res?.data?.accessToken) {
-          storeUserInfo(res.data.accessToken);
-          router.push("/dashboard");
-          return res.message;
-        } else {
-          return res.message;
-        }
-      },
-      error: (error: any) => {
-        console.log(error.message);
-        return error?.message || "Login failed";
-      },
-    });
+    //     if (res?.data?.accessToken) {
+    //       storeUserInfo(res.data.accessToken);
+    //       router.push("/dashboard");
+    //       return res.message;
+    //     } else {
+    //       return res.message;
+    //     }
+    //   },
+    //   error: (error: any) => {
+    //     console.log(error.message);
+    //     return error?.message || "Login failed";
+    //   },
+    // });
   };
 
   return (

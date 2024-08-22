@@ -1,17 +1,14 @@
 import {
   FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   SxProps,
-  SelectChangeEvent,
   Typography,
-  Box,
   Stack,
+  Input,
+  Button,
+  Box,
 } from "@mui/material";
 
 import { styled } from "@mui/material/styles";
-import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Controller, useFormContext } from "react-hook-form";
 
@@ -20,7 +17,7 @@ interface IEHSelect {
   label: string;
   required?: boolean;
   fullWidth?: boolean;
-  size?: number;
+  size?: "small" | "medium";
   sx?: SxProps;
 }
 
@@ -36,52 +33,68 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-const EHFile = ({ name, label, fullWidth, sx, size }: IEHSelect) => {
+const EHFile = ({ name, label, fullWidth, sx, size = "small" }: IEHSelect) => {
   const { control } = useFormContext();
 
   return (
     <Controller
       control={control}
       name={name}
-      render={({ field, fieldState: { error } }) => (
-        <FormControl
-          fullWidth={fullWidth}
+      render={({
+        field: { onChange, value, ...field },
+        fieldState: { error },
+      }) => (
+        <Box
+          component="label"
           sx={{
-            border: "1px solid black",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            border: "1px solid gray",
             width: "100%",
-            p: "5px",
-            borderRadius: "3px",
-            borderColor: "gray",
+            padding: "8px",
+            borderRadius: "4px",
+            cursor: "pointer",
+            transition: "border-color 0.2s",
             "&:hover": {
               borderColor: "rgba(0, 0, 0, 0.87)",
             },
           }}
-          error={!!error?.message}
         >
-          <Stack
-            direction="row"
-            gap={1}
-            role={undefined}
-            sx={{ cursor: "pointer" }}
-          >
-            <CloudUploadIcon />
-            {label}
-            <VisuallyHiddenInput {...field} size={size} type="file" />
-          </Stack>
-
-          {!!error?.message && (
-            <Typography
-              sx={{
-                textAlign: "start",
-                fontSize: "small",
-                color: "#D32F2F",
-                pl: "10px",
-              }}
-            >
-              {error.message}
-            </Typography>
-          )}
-        </FormControl>
+          <CloudUploadIcon sx={{ marginRight: "8px" }} />
+          <Typography variant="body2" component="span">
+            {label || "Upload File"}
+          </Typography>
+          <Input
+            {...field}
+            size={size}
+            value={value?.fileName}
+            type={name}
+            onChange={(e) =>
+              onChange((e.target as HTMLInputElement).files?.[0])
+            }
+            sx={{ display: "none" }}
+          />
+        </Box>
+        // <Button
+        //   fullWidth
+        //   component="label"
+        //   role={undefined}
+        //   variant="contained"
+        //   tabIndex={-1}
+        //   startIcon={<CloudUploadIcon />}
+        //   sx={{ ...sx }}
+        // >
+        //   {label || "Upload File"}
+        //   <Input
+        //     {...field}
+        //     size={size}
+        //     value={value?.fileName}
+        //     type={name}
+        //     onChange={(e) => console.log(e.target.files)}
+        //     sx={{ display: "none" }}
+        //   />
+        // </Button>
       )}
     />
   );
