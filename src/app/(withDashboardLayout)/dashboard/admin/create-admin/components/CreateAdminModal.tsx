@@ -1,21 +1,17 @@
-import { Gender } from "@/constants/common";
-import { useCreateOrganizerMutation } from "@/redux/api/organizerApi";
-import EHFile from "@/utils/components/Forms/EHFile";
+import { z } from "zod";
+import { IProps } from "../../components/CreateOrgModal";
+import EHModal from "@/utils/components/Shared/EHModal/EHModal";
+import { Box, Button, Grid } from "@mui/material";
 import EHForm from "@/utils/components/Forms/EHForm";
+import { FieldValues } from "react-hook-form";
+import modifyPayload from "@/utils/modifyPayload";
+import { useCreateAdminMutation } from "@/redux/api/adminApi";
+import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
 import EHInput from "@/utils/components/Forms/EHInput";
 import EHSelect from "@/utils/components/Forms/EHSelect";
-import EHModal from "@/utils/components/Shared/EHModal/EHModal";
-import modifyPayload from "@/utils/modifyPayload";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Button, Grid } from "@mui/material";
-import { FieldValues } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
-
-export interface IProps {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import EHFile from "@/utils/components/Forms/EHFile";
+import { Gender } from "@/constants/common";
 
 const fileSchema = z
   .instanceof(File)
@@ -30,7 +26,7 @@ const fileSchema = z
 export const organizerValidation = z.object({
   file: fileSchema,
   password: z.string().min(6, "Password must be at least 6 characters"),
-  organizer: z.object({
+  admin: z.object({
     name: z.string().min(1, "Please enter your name"),
     email: z.string().email("Please enter a valid Email"),
     gender: z.enum(["MALE", "FEMALE", "OTHERS"], {
@@ -38,39 +34,33 @@ export const organizerValidation = z.object({
     }),
     contactNumber: z.string().regex(/^\d{11}$/, "Please enter a valid number"),
     address: z.string().optional(),
-    organizationName: z.string().min(1, "Please enter your Organization Name"),
-    websiteUrl: z.string().optional(),
-    socialMediaUrl: z.string().optional(),
   }),
 });
 
 export const defaultValues = {
   password: "",
-  organizer: {
+  admin: {
     name: "",
     email: "",
     gender: "",
     contactNumber: "",
-    organizationName: "",
   },
 };
 
-const CreateOrgModal = ({ open, setOpen }: IProps) => {
-  const [createOrganizer] = useCreateOrganizerMutation();
+const CreateAdminModal = ({ open, setOpen }: IProps) => {
+  const [createAdmin] = useCreateAdminMutation();
 
   const handleCreateOrg = async (data: FieldValues) => {
     const formData = modifyPayload(data);
 
-    const res = createOrganizer(formData).unwrap();
+    const res = createAdmin(formData).unwrap();
 
     toast.promise(res, {
       loading: "Creating...",
       success: (res: any) => {
-        console.log(res);
-
         if (res?.id) {
           setOpen(false);
-          return res?.message || "Organizer created successfully";
+          return res?.message || "Admin created successfully";
         } else {
           return res?.message;
         }
@@ -83,7 +73,7 @@ const CreateOrgModal = ({ open, setOpen }: IProps) => {
   };
 
   return (
-    <EHModal open={open} setOpen={setOpen} title="Create Organizer">
+    <EHModal open={open} setOpen={setOpen} title="Create Admin">
       <Box>
         <EHForm
           onSubmit={handleCreateOrg}
@@ -98,10 +88,10 @@ const CreateOrgModal = ({ open, setOpen }: IProps) => {
             justifyContent="center"
           >
             <Grid item md={4}>
-              <EHInput name="organizer.name" label="Name" />
+              <EHInput name="admin.name" label="Name" />
             </Grid>
             <Grid item md={4}>
-              <EHInput name="organizer.email" type="email" label="Email" />
+              <EHInput name="admin.email" type="email" label="Email" />
             </Grid>
             <Grid item md={4} sm={12}>
               <EHInput
@@ -113,7 +103,7 @@ const CreateOrgModal = ({ open, setOpen }: IProps) => {
             </Grid>
             <Grid item md={4} sm={12}>
               <EHSelect
-                name="organizer.gender"
+                name="admin.gender"
                 label="Gender"
                 sx={{ width: "100%" }}
                 fullWidth={true}
@@ -121,35 +111,14 @@ const CreateOrgModal = ({ open, setOpen }: IProps) => {
               />
             </Grid>
             <Grid item md={4}>
-              <EHInput name="organizer.contactNumber" label="Contact Number" />
+              <EHInput name="admin.contactNumber" label="Contact Number" />
             </Grid>
             <Grid item md={4}>
               <EHFile name="file" label="Upload Image" />
             </Grid>
-            <Grid item md={6}>
-              <EHInput name="organizer.organizationName" label="Organization" />
-            </Grid>
-            <Grid item md={6}>
-              <EHInput
-                name="organizer.websiteUrl"
-                label="Website Url"
-                required={false}
-              />
-            </Grid>
 
             <Grid item md={6}>
-              <EHInput
-                name="organizer.socialMediaUrl"
-                label="Social Media Url"
-                required={false}
-              />
-            </Grid>
-            <Grid item md={6}>
-              <EHInput
-                name="organizer.address"
-                label="Address"
-                required={false}
-              />
+              <EHInput name="admin.address" label="Address" required={false} />
             </Grid>
           </Grid>
 
@@ -170,4 +139,4 @@ const CreateOrgModal = ({ open, setOpen }: IProps) => {
     </EHModal>
   );
 };
-export default CreateOrgModal;
+export default CreateAdminModal;

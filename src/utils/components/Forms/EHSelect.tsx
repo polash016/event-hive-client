@@ -6,6 +6,7 @@ import {
   SxProps,
   SelectChangeEvent,
   Typography,
+  TextField,
 } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 
@@ -16,7 +17,7 @@ interface IEHSelect {
   fullWidth?: boolean;
   size?: "small" | "medium";
   sx?: SxProps;
-  options: { label: string; value: string }[];
+  options: string[];
 }
 
 const EHSelect = ({
@@ -26,42 +27,35 @@ const EHSelect = ({
   sx,
   options,
   size = "small",
+  required = true,
 }: IEHSelect) => {
-  const { control } = useFormContext();
+  const { control, formState } = useFormContext();
+  const isError = formState.errors[name] !== undefined;
 
   return (
     <Controller
       control={control}
       name={name}
       render={({ field, fieldState: { error } }) => (
-        <FormControl fullWidth={fullWidth} sx={sx} error={!!error?.message}>
-          <InputLabel>{label}</InputLabel>
-          <Select
-            {...field}
-            labelId={`${name}-label`}
-            label={label}
-            error={!!error?.message}
-            size={size}
-          >
-            {options.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </Select>
-          {!!error?.message && (
-            <Typography
-              sx={{
-                textAlign: "start",
-                fontSize: "small",
-                color: "#D32F2F",
-                pl: "10px",
-              }}
-            >
-              {error.message}
-            </Typography>
-          )}
-        </FormControl>
+        <TextField
+          {...field}
+          fullWidth={fullWidth}
+          sx={sx}
+          error={!!error?.message}
+          label={label}
+          select
+          required={required}
+          size={size}
+          helperText={
+            isError ? (formState.errors[name]?.message as string) : ""
+          }
+        >
+          {options.map((name) => (
+            <MenuItem key={name} value={name}>
+              {name}
+            </MenuItem>
+          ))}
+        </TextField>
       )}
     />
   );

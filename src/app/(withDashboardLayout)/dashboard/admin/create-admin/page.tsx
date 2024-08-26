@@ -1,60 +1,71 @@
 "use client";
 import assets from "@/assets";
-import { loginUser } from "@/services/actions/loginUser";
-import { storeUserInfo } from "@/services/auth.service";
-import EHFile from "@/utils/components/Forms/EHFile";
-import EHForm from "@/utils/components/Forms/EHForm";
-import EHInput from "@/utils/components/Forms/EHInput";
-import EHSelect from "@/utils/components/Forms/EHSelect";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Container, Stack, TextField } from "@mui/material";
 import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
-
-export const loginValidation = z.object({
-  email: z.string().email("Please enter a valid Email"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
+import CreateAdminModal from "./components/CreateAdminModal";
+import { useState } from "react";
+import {
+  useDeleteAdminMutation,
+  useGetAllAdminQuery,
+} from "@/redux/api/adminApi";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useDebounced } from "@/redux/hooks";
 
 const CreateAdmin = () => {
-  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [deleteAdmin] = useDeleteAdminMutation();
+  const [searchTerm, setSearchTerm] = useState("");
+  const query: Record<string, any> = {};
 
-  const handleLogin = async (data: FieldValues) => {
-    console.log(data);
+  const debouncedTerm = useDebounced({ searchQuery: searchTerm, delay: 600 });
 
-    // const res = loginUser(data);
+  if (!!debouncedTerm) {
+    query["searchTerm"] = searchTerm;
+  }
 
-    // toast.promise(res, {
-    //   loading: "Logging in...",
-    //   success: (res: any) => {
-    //     console.log(res);
+  const { data, isLoading } = useGetAllAdminQuery({});
 
-    //     if (res?.data?.accessToken) {
-    //       storeUserInfo(res.data.accessToken);
-    //       router.push("/dashboard");
-    //       return res.message;
-    //     } else {
-    //       return res.message;
-    //     }
-    //   },
-    //   error: (error: any) => {
-    //     console.log(error.message);
-    //     return error?.message || "Login failed";
-    //   },
-    // });
+  const handleDelete = (id: string) => {
+    const res = deleteAdmin(id).unwrap();
+
+    toast.promise(res, {
+      loading: "Deleting...",
+      success: (res: any) => {
+        if (res?.id) {
+          return res.message || "Admin Deleted Successfully";
+        } else {
+          return res.message;
+        }
+      },
+      error: (error: any) => {
+        console.log(error);
+        return error?.message || "Delete failed";
+      },
+    });
   };
+
+  const columns: GridColDef[] = [
+    { field: "name", headerName: "Name", width: 250, flex: 1 },
+    { field: "email", headerName: "Email", width: 250, flex: 2 },
+    { field: "contactNumber", headerName: "Contact", width: 250, flex: 1 },
+    {
+      field: `delete`,
+      headerName: "Delete",
+      align: "center",
+      headerAlign: "center",
+      width: 250,
+      renderCell: ({ row }) => {
+        return (
+          <button onClick={() => handleDelete(row.id)}>
+            <DeleteIcon color="error" />
+          </button>
+        );
+      },
+      flex: 1,
+    },
+  ];
 
   return (
     <Container>
@@ -69,94 +80,60 @@ const CreateAdmin = () => {
             width: "100%",
           }}
         >
-          <Stack
-            sx={{
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "10px",
+          <Image
+            style={{
+              display: "block",
+              margin: "0px auto",
             }}
-          >
+            alt="logo"
+            src={assets.logo.login_icon}
+            width={100}
+            height={100}
+          ></Image>
+
+          <Stack my={5} direction="row" justifyContent="space-between">
             <Box>
-              <Image
-                alt="logo"
-                src={assets.logo.login_icon}
-                width={100}
-                height={100}
-              ></Image>
+              <Button onClick={() => setOpen(!open)}>Create Admin</Button>
+              <CreateAdminModal
+                open={open}
+                setOpen={setOpen}
+              ></CreateAdminModal>
             </Box>
             <Box>
-              <Typography variant="h6" fontWeight={600} color="grey.800">
-                Create Admin
-              </Typography>
+              <TextField
+                onChange={(e) => e.target.value}
+                size="small"
+                placeholder="Search Here"
+              ></TextField>
             </Box>
           </Stack>
-          <Box>
-            <EHForm
-              onSubmit={handleLogin}
-              resolver={zodResolver(loginValidation)}
-              defaultValues={{
-                email: "",
-                password: "",
-              }}
-            >
-              <Grid container spacing={6} my={1} alignItems="center">
-                <Grid item md={6}>
-                  <EHInput name="admin.name" label="Name" />
-                </Grid>
-                <Grid item md={6}>
-                  <EHInput name="admin.email" type="email" label="Email" />
-                </Grid>
-                <Grid item md={6} sm={12}>
-                  <EHInput
-                    name="password"
-                    fullWidth={true}
-                    type="password"
-                    label="Password"
-                  />
-                </Grid>
-                <Grid item md={6} sm={12}>
-                  <EHSelect
-                    name="admin.gender"
-                    label="Gender"
-                    sx={{ width: "100%" }}
-                    fullWidth={true}
-                    options={[
-                      { label: "Male", value: "MALE" },
-                      { label: "FeMale", value: "FEMALE" },
-                      { label: "Others", value: "OTHERS" },
-                    ]}
-                  />
-                </Grid>
-                <Grid item md={6}>
-                  <EHInput name="admin.contactNumber" label="Contact Number" />
-                </Grid>
-                <Grid item md={6}>
-                  <EHFile name="file" label="Upload Image" />
-                </Grid>
-
-                <Grid item md={6}>
-                  <EHInput
-                    name="admin.address"
-                    label="Address"
-                    required={false}
-                  />
-                </Grid>
-              </Grid>
-
-              <Button
-                type="submit"
-                sx={{
-                  display: "block",
-                  // px: "60px",
-                  width: "200px",
-                  mx: "auto",
-                  my: 4,
+          {!isLoading ? (
+            <Box>
+              <DataGrid
+                rows={data}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: { page: 0, pageSize: 5 },
+                  },
                 }}
-              >
-                Submit
-              </Button>
-            </EHForm>
-          </Box>
+                pageSizeOptions={[5, 10]}
+                autoHeight
+                sx={{
+                  "& .MuiDataGrid-columnHeaders": {
+                    backgroundColor: "#f5f5f5",
+                  },
+                  "& .MuiDataGrid-cell": {
+                    whiteSpace: "normal",
+                    wordWrap: "break-word",
+                  },
+                }}
+              />
+            </Box>
+          ) : (
+            // <CircularProgress color="success" />
+            <h1>Loading.....</h1>
+          )}
         </Box>
       </Stack>
     </Container>

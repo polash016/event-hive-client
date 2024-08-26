@@ -18,11 +18,21 @@ import {
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { toast } from "sonner";
+import { useDebounced } from "@/redux/hooks";
 
 const CreateOrganizer = () => {
   const [open, setOpen] = useState(false);
-  const { data, isLoading } = useGetAllOrganizerQuery({});
   const [deleteOrganizer] = useDeleteOrganizerMutation();
+  const [searchTerm, setSearchTerm] = useState("");
+  const query: Record<string, any> = {};
+
+  const debouncedTerm = useDebounced({ searchQuery: searchTerm, delay: 600 });
+
+  if (!!debouncedTerm) {
+    query["searchTerm"] = searchTerm;
+  }
+
+  const { data, isLoading } = useGetAllOrganizerQuery({ ...query });
   // const [pagination, setPagination] = useState({
   //   page: 0,
   //   pageSize: 5,
@@ -31,6 +41,8 @@ const CreateOrganizer = () => {
   // const handlePaginationChange = (newPagination: GridPaginationModel) => {
   //   setPagination(newPagination);
   // };
+
+  console.log(data);
 
   const handleDelete = (id: string) => {
     const res = deleteOrganizer(id).unwrap();
@@ -104,7 +116,11 @@ const CreateOrganizer = () => {
               <CreateOrgModal open={open} setOpen={setOpen}></CreateOrgModal>
             </Box>
             <Box>
-              <TextField size="small" placeholder="Search Here"></TextField>
+              <TextField
+                onChange={(e) => setSearchTerm(e.target.value)}
+                size="small"
+                placeholder="Search Here"
+              ></TextField>
             </Box>
           </Stack>
           {!isLoading ? (

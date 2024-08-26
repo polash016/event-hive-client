@@ -40,12 +40,12 @@ export const generateSidebar = (role: IUserRole): INavbarItem[] => {
           icon: PeopleAltIcon,
         },
         {
-          title: "Create Admin",
+          title: "Admin",
           path: `${role}/create-admin`,
           icon: AddCircleIcon,
         },
         {
-          title: "Create Organizer",
+          title: "Organizer",
           path: `${role}/create-organizer`,
           icon: PeopleAltIcon,
         },
