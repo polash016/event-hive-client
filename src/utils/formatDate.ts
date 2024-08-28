@@ -9,5 +9,5 @@ export const formatDate = (value: string) => {
 
   const formattedDate = `${year}-${month}-${day}`;
 
-  return formatDate;
+  return formattedDate;
 };
