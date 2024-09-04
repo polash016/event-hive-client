@@ -4,6 +4,7 @@ import { loginUser } from "@/services/actions/loginUser";
 import { storeUserInfo } from "@/services/auth.service";
 import EHForm from "@/utils/components/Forms/EHForm";
 import EHInput from "@/utils/components/Forms/EHInput";
+import EHButton from "@/utils/components/ui/EHButton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
@@ -135,16 +136,15 @@ const Login = () => {
               <Typography textAlign="center" component="p">
                 Forgot Password?
               </Typography>
-              <Button
+              <EHButton
+                title="Login"
                 type="submit"
                 sx={{
                   display: "block",
                   mx: "auto",
                   my: 4,
                 }}
-              >
-                Login
-              </Button>
+              />
             </EHForm>
 
             <Typography component="p">

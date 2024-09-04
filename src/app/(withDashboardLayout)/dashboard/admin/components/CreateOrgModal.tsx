@@ -5,7 +5,8 @@ import EHForm from "@/utils/components/Forms/EHForm";
 import EHInput from "@/utils/components/Forms/EHInput";
 import EHSelect from "@/utils/components/Forms/EHSelect";
 import EHModal from "@/utils/components/Shared/EHModal/EHModal";
-import modifyPayload from "@/utils/modifyPayload";
+import EHButton from "@/utils/components/ui/EHButton";
+import { modifyPayload } from "@/utils/modifyPayload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, Grid } from "@mui/material";
 import { FieldValues } from "react-hook-form";
@@ -66,8 +67,6 @@ const CreateOrgModal = ({ open, setOpen }: IProps) => {
     toast.promise(res, {
       loading: "Creating...",
       success: (res: any) => {
-        console.log(res);
-
         if (res?.id) {
           setOpen(false);
           return res?.message || "Organizer created successfully";
@@ -153,7 +152,8 @@ const CreateOrgModal = ({ open, setOpen }: IProps) => {
             </Grid>
           </Grid>
 
-          <Button
+          <EHButton
+            title="Submit"
             type="submit"
             sx={{
               display: "block",
@@ -162,9 +162,7 @@ const CreateOrgModal = ({ open, setOpen }: IProps) => {
               mx: "auto",
               my: 4,
             }}
-          >
-            Submit
-          </Button>
+          />
         </EHForm>
       </Box>
     </EHModal>

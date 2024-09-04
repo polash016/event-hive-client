@@ -8,10 +8,10 @@ import dayjs from "dayjs";
 interface IProps {
   name: string;
   label: string;
-  required: boolean;
-  fullWidth: boolean;
-  size: "small" | "medium";
-  sx: SxProps;
+  required?: boolean;
+  fullWidth?: boolean;
+  size?: "small" | "medium";
+  sx?: SxProps;
 }
 
 const EHTimePicker = ({
@@ -36,7 +36,6 @@ const EHTimePicker = ({
             <MobileTimePicker
               {...field}
               timezone="system"
-              disablePast
               onChange={(date) => onChange(date)}
               label={label}
               value={value || Date.now()}

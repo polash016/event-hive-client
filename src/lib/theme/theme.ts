@@ -12,12 +12,6 @@ export const theme = createTheme({
 
   components: {
     MuiButton: {
-      styleOverrides: {
-        root: {
-          background: "linear-gradient(90deg, #f857a6 0%, #ff5858 100%)", // replace with your gradient
-          color: "white",
-        },
-      },
       defaultProps: {
         variant: "contained",
       },

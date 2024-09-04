@@ -25,7 +25,11 @@ const CreateAdmin = () => {
     query["searchTerm"] = searchTerm;
   }
 
-  const { data, isLoading } = useGetAllAdminQuery({});
+  const { data, isLoading, error } = useGetAllAdminQuery({});
+
+  console.log(data);
+
+  console.log(error);
 
   const handleDelete = (id: string) => {
     const res = deleteAdmin(id).unwrap();
@@ -101,7 +105,7 @@ const CreateAdmin = () => {
             </Box>
             <Box>
               <TextField
-                onChange={(e) => e.target.value}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 size="small"
                 placeholder="Search Here"
               ></TextField>

@@ -1,18 +1,9 @@
-import {
-  FormControl,
-  SxProps,
-  Typography,
-  Stack,
-  Input,
-  Button,
-  Box,
-} from "@mui/material";
-
+import { FormControl, SxProps, Typography, Box, Input } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Controller, useFormContext } from "react-hook-form";
 
-interface IEHSelect {
+interface IEHFiles {
   name: string;
   label: string;
   type?: string;
@@ -34,14 +25,14 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-const EHFile = ({
+const EHFiles = ({
   name,
   label,
-  fullWidth,
+  fullWidth = true,
   sx,
   size = "small",
   type = "file",
-}: IEHSelect) => {
+}: IEHFiles) => {
   const { control } = useFormContext();
 
   return (
@@ -73,15 +64,14 @@ const EHFile = ({
           <Typography variant="body2" component="span">
             {label || "Upload File"}
           </Typography>
-          <Input
+          <VisuallyHiddenInput
             {...field}
-            size={size}
-            value={value?.fileName}
             type={type}
-            onChange={(e) =>
-              onChange((e.target as HTMLInputElement).files?.[0])
-            }
-            sx={{ display: "none" }}
+            multiple // Allows multiple file selection
+            onChange={(e) => {
+              const files = (e.target as HTMLInputElement).files;
+              onChange(files ? Array.from(files) : []);
+            }}
           />
         </Box>
       )}
@@ -89,4 +79,4 @@ const EHFile = ({
   );
 };
 
-export default EHFile;
+export default EHFiles;

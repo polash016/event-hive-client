@@ -2,6 +2,7 @@ import { isLoggedIn, logOut } from "@/services/auth.service";
 import { Button } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import EHButton from "../EHButton";
 
 const AuthButton = () => {
   const isLogged = isLoggedIn();
@@ -15,13 +16,13 @@ const AuthButton = () => {
     <>
       {" "}
       {isLogged ? (
-        <Button onClick={handleLogOut} sx={{ textTransform: "none" }}>
-          Log Out
-        </Button>
+        <EHButton
+          title="Log Out"
+          onClick={handleLogOut}
+          sx={{ textTransform: "none" }}
+        />
       ) : (
-        <Button component={Link} href="/login">
-          Login
-        </Button>
+        <EHButton title="Login" component={Link} href="/login" />
       )}
     </>
   );

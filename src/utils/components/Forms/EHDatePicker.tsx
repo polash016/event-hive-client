@@ -10,10 +10,10 @@ import { useFormState } from "react-dom";
 interface IProps {
   name: string;
   label: string;
-  required: boolean;
-  fullWidth: boolean;
-  size: "small" | "medium";
-  sx: SxProps;
+  required?: boolean;
+  fullWidth?: boolean;
+  size?: "small" | "medium";
+  sx?: SxProps;
 }
 
 const EHDatePicker = ({

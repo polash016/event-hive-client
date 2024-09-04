@@ -65,8 +65,8 @@ export const generateSidebar = (role: IUserRole): INavbarItem[] => {
           icon: DashboardIcon,
         },
         {
-          title: "Create Event",
-          path: `${role}/create-event`,
+          title: "Event",
+          path: `${role}/event`,
           icon: EditCalendarIcon,
         },
         {

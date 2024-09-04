@@ -18,6 +18,7 @@ interface IEHSelect {
   size?: "small" | "medium";
   sx?: SxProps;
   options: string[];
+  onChange?: (value: string) => void;
 }
 
 const EHSelect = ({
@@ -28,6 +29,7 @@ const EHSelect = ({
   options,
   size = "small",
   required = true,
+  onChange,
 }: IEHSelect) => {
   const { control, formState } = useFormContext();
   const isError = formState.errors[name] !== undefined;
@@ -36,7 +38,10 @@ const EHSelect = ({
     <Controller
       control={control}
       name={name}
-      render={({ field, fieldState: { error } }) => (
+      render={({
+        field: { onChange: fieldOnChange, ...field },
+        fieldState: { error },
+      }) => (
         <TextField
           {...field}
           fullWidth={fullWidth}
@@ -49,6 +54,12 @@ const EHSelect = ({
           helperText={
             isError ? (formState.errors[name]?.message as string) : ""
           }
+          onChange={(e) => {
+            fieldOnChange(e);
+            if (onChange) {
+              onChange(e.target.value);
+            }
+          }}
         >
           {options.map((name) => (
             <MenuItem key={name} value={name}>

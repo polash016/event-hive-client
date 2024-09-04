@@ -4,7 +4,7 @@ import EHModal from "@/utils/components/Shared/EHModal/EHModal";
 import { Box, Button, Grid } from "@mui/material";
 import EHForm from "@/utils/components/Forms/EHForm";
 import { FieldValues } from "react-hook-form";
-import modifyPayload from "@/utils/modifyPayload";
+import { modifyPayload } from "@/utils/modifyPayload";
 import { useCreateAdminMutation } from "@/redux/api/adminApi";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,6 +12,7 @@ import EHInput from "@/utils/components/Forms/EHInput";
 import EHSelect from "@/utils/components/Forms/EHSelect";
 import EHFile from "@/utils/components/Forms/EHFile";
 import { Gender } from "@/constants/common";
+import EHButton from "@/utils/components/ui/EHButton";
 
 const fileSchema = z
   .instanceof(File)
@@ -122,7 +123,8 @@ const CreateAdminModal = ({ open, setOpen }: IProps) => {
             </Grid>
           </Grid>
 
-          <Button
+          <EHButton
+            title="Submit"
             type="submit"
             sx={{
               display: "block",
@@ -131,9 +133,7 @@ const CreateAdminModal = ({ open, setOpen }: IProps) => {
               mx: "auto",
               my: 4,
             }}
-          >
-            Submit
-          </Button>
+          />
         </EHForm>
       </Box>
     </EHModal>

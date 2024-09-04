@@ -1,11 +1,13 @@
 "use client";
 import assets from "@/assets";
+import { Gender } from "@/constants/common";
 import { registerAttendee } from "@/services/actions/registerAttendee";
 import EHFile from "@/utils/components/Forms/EHFile";
 import EHForm from "@/utils/components/Forms/EHForm";
 import EHInput from "@/utils/components/Forms/EHInput";
 import EHSelect from "@/utils/components/Forms/EHSelect";
-import modifyPayload from "@/utils/modifyPayload";
+import EHButton from "@/utils/components/ui/EHButton";
+import { modifyPayload } from "@/utils/modifyPayload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Box,
@@ -149,11 +151,7 @@ const Register = () => {
                     name="attendee.gender"
                     label="Gender"
                     fullWidth={true}
-                    options={[
-                      { label: "Male", value: "MALE" },
-                      { label: "FeMale", value: "FEMALE" },
-                      { label: "Others", value: "OTHERS" },
-                    ]}
+                    options={Gender}
                   />
                 </Grid>
                 <Grid item md={6}>
@@ -170,16 +168,15 @@ const Register = () => {
                   <EHInput name="attendee.address" label="Address" />
                 </Grid>
               </Grid>
-              <Button
+              <EHButton
+                title="Register"
                 type="submit"
                 sx={{
                   display: "block",
                   mx: "auto",
                   my: 4,
                 }}
-              >
-                Register
-              </Button>
+              />
             </EHForm>
             <Typography component="p">
               Already have an account?{" "}

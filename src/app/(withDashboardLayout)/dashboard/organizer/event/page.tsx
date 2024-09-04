@@ -1,29 +1,22 @@
 "use client";
 import assets from "@/assets";
 import {
-  Box,
-  Button,
-  Container,
-  Stack,
-  TextField,
-  CircularProgress,
-} from "@mui/material";
+  useDeleteEventMutation,
+  useGetAllEventQuery,
+} from "@/redux/api/eventApi";
+import { useDebounced } from "@/redux/hooks";
+import { Box, Button, Container, Stack, TextField } from "@mui/material";
+import { DataGrid, GridColDef, GridDeleteIcon } from "@mui/x-data-grid";
 import Image from "next/image";
 import { useState } from "react";
-import CreateOrgModal from "../components/CreateOrgModal";
-import {
-  useDeleteOrganizerMutation,
-  useGetAllOrganizerQuery,
-} from "@/redux/api/organizerApi";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { toast } from "sonner";
-import { useDebounced } from "@/redux/hooks";
+import CreateEventModal from "./components/CreateEventModal";
 import EHButton from "@/utils/components/ui/EHButton";
+import EventCard from "@/utils/components/ui/EventCard/EventCard";
 
-const CreateOrganizer = () => {
+const OrganizerPage = () => {
   const [open, setOpen] = useState(false);
-  const [deleteOrganizer] = useDeleteOrganizerMutation();
+  const [deleteAdmin] = useDeleteEventMutation();
   const [searchTerm, setSearchTerm] = useState("");
   const query: Record<string, any> = {};
 
@@ -33,34 +26,26 @@ const CreateOrganizer = () => {
     query["searchTerm"] = searchTerm;
   }
 
-  const { data, isLoading } = useGetAllOrganizerQuery({ ...query });
-  // const [pagination, setPagination] = useState({
-  //   page: 0,
-  //   pageSize: 5,
-  // });
-
-  // const handlePaginationChange = (newPagination: GridPaginationModel) => {
-  //   setPagination(newPagination);
-  // };
+  const { data, isLoading, error } = useGetAllEventQuery({});
 
   console.log(data);
 
+  console.log(error);
+
   const handleDelete = (id: string) => {
-    const res = deleteOrganizer(id).unwrap();
+    const res = deleteAdmin(id).unwrap();
 
     toast.promise(res, {
       loading: "Deleting...",
       success: (res: any) => {
-        console.log(res);
-
         if (res?.id) {
-          return res.message || "User Deleted Successfully";
+          return res.message || "Admin Deleted Successfully";
         } else {
           return res.message;
         }
       },
       error: (error: any) => {
-        console.log(error.message);
+        console.log(error);
         return error?.message || "Delete failed";
       },
     });
@@ -79,7 +64,7 @@ const CreateOrganizer = () => {
       renderCell: ({ row }) => {
         return (
           <button onClick={() => handleDelete(row.id)}>
-            <DeleteIcon color="error" />
+            <GridDeleteIcon color="error" />
           </button>
         );
       },
@@ -113,11 +98,25 @@ const CreateOrganizer = () => {
 
           <Stack my={5} direction="row" justifyContent="space-between">
             <Box>
-              <EHButton
-                title="Create Organizer"
+              <EHButton title="Create Event" onClick={() => setOpen(!open)} />
+              {/* <Button
                 onClick={() => setOpen(!open)}
-              />
-              <CreateOrgModal open={open} setOpen={setOpen}></CreateOrgModal>
+                sx={{
+                  background:
+                    "linear-gradient(90deg, #f857a6 0%, #ff5858 100%)",
+                  color: "white",
+                  "&:hover": {
+                    background:
+                      "linear-gradient(90deg, #ff5858 0%, #f857a6 100%)",
+                  },
+                }}
+              >
+                Create Event
+              </Button> */}
+              <CreateEventModal
+                open={open}
+                setOpen={setOpen}
+              ></CreateEventModal>
             </Box>
             <Box>
               <TextField
@@ -127,36 +126,19 @@ const CreateOrganizer = () => {
               ></TextField>
             </Box>
           </Stack>
-          {!isLoading ? (
-            <Box>
-              <DataGrid
-                rows={data}
-                columns={columns}
-                initialState={{
-                  pagination: {
-                    paginationModel: { page: 0, pageSize: 5 },
-                  },
-                }}
-                pageSizeOptions={[5, 10]}
-                autoHeight
-                sx={{
-                  "& .MuiDataGrid-columnHeaders": {
-                    backgroundColor: "#f5f5f5",
-                  },
-                  "& .MuiDataGrid-cell": {
-                    whiteSpace: "normal",
-                    wordWrap: "break-word",
-                  },
-                }}
-              />
-            </Box>
-          ) : (
-            // <CircularProgress color="success" />
-            <h1>Loading.....</h1>
-          )}
+          <Box>
+            {!isLoading ? (
+              data.map((event: any) => {
+                return <EventCard key={event.id} data={event} />;
+              })
+            ) : (
+              // <CircularProgress color="success" />
+              <h1>Loading.....</h1>
+            )}
+          </Box>
         </Box>
       </Stack>
     </Container>
   );
 };
-export default CreateOrganizer;
+export default OrganizerPage;
