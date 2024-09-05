@@ -107,6 +107,8 @@ export default function DashboardDrawer({
           p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           minHeight: `100vh`,
+          height: "100%",
+          overflowY: "auto",
           bgcolor: "white",
         }}
       >

@@ -5,7 +5,7 @@ import {
   useGetAllEventQuery,
 } from "@/redux/api/eventApi";
 import { useDebounced } from "@/redux/hooks";
-import { Box, Button, Container, Stack, TextField } from "@mui/material";
+import { Box, Button, Container, Grid, Stack, TextField } from "@mui/material";
 import { DataGrid, GridColDef, GridDeleteIcon } from "@mui/x-data-grid";
 import Image from "next/image";
 import { useState } from "react";
@@ -34,6 +34,8 @@ const OrganizerPage = () => {
 
   const handleDelete = (id: string) => {
     const res = deleteAdmin(id).unwrap();
+
+    // dayjs(date).format("hh:mm a")
 
     toast.promise(res, {
       loading: "Deleting...",
@@ -126,16 +128,26 @@ const OrganizerPage = () => {
               ></TextField>
             </Box>
           </Stack>
-          <Box>
+          <Grid
+            container
+            spacing={4}
+            my={1}
+            alignItems="center"
+            justifyContent="start"
+          >
             {!isLoading ? (
               data.map((event: any) => {
-                return <EventCard key={event.id} data={event} />;
+                return (
+                  <Grid key={event.id} item sm={6} md={6} lg={4}>
+                    <EventCard data={event} />
+                  </Grid>
+                );
               })
             ) : (
               // <CircularProgress color="success" />
               <h1>Loading.....</h1>
             )}
-          </Box>
+          </Grid>
         </Box>
       </Stack>
     </Container>

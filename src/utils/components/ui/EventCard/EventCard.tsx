@@ -14,6 +14,10 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import dayjs from "dayjs";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { Box, Tooltip } from "@mui/material";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -51,7 +55,7 @@ export default function EventCard({ data }: { data: any }) {
   };
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ maxWidth: 400, height: 600 }}>
       <CardHeader
         action={
           <IconButton aria-label="settings">
@@ -59,7 +63,7 @@ export default function EventCard({ data }: { data: any }) {
           </IconButton>
         }
         title={data.name}
-        subheader={data.dateTime}
+        subheader={dayjs(data.dateTime).format("MMM D, YYYY")} //dayjs(data.dateTime).format('MMM D, YYYY')
       />
       <CardMedia
         component="img"
@@ -69,17 +73,94 @@ export default function EventCard({ data }: { data: any }) {
         alt="Events"
       />
       <CardContent>
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {data.description}
-        </Typography>
+        <Box height={100}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              my: "6px",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "start",
+                alignItems: "center",
+                gap: "0.5px",
+                overflow: "hidden",
+                my: "2px",
+              }}
+            >
+              <LocationOnIcon
+                sx={{ color: "text.secondary", fontSize: "small" }}
+              />
+              <Tooltip title={data?.location?.street || ""}>
+                <Typography
+                  variant="subtitle2"
+                  sx={{ color: "text.secondary", fontSize: "small" }}
+                >
+                  {data?.location?.street.slice(0, 6)},
+                </Typography>
+              </Tooltip>
+
+              <Typography
+                variant="subtitle2"
+                sx={{ color: "text.secondary", fontSize: "small" }}
+              >
+                {data?.location?.city}
+              </Typography>
+            </Box>
+            <Box>
+              <Typography variant="subtitle2" sx={{ color: "text.secondary" }}>
+                From: {dayjs(data.dateTime).format("hh:mm a")}
+              </Typography>
+            </Box>
+          </Box>
+          <Typography>
+            {data.description.length > 70
+              ? `${data?.description.slice(0, 70)}...`
+              : data?.description}
+          </Typography>
+
+          <Typography my="5px">
+            {data?.type === "CONCERT" ? (
+              <Typography variant="body1">
+                <Typography
+                  component="span"
+                  sx={{
+                    fontWeight: "bold",
+                    fontStyle: "revert",
+                    marginRight: "4px",
+                  }}
+                >
+                  Artist:
+                </Typography>
+                {data?.artist?.name}
+              </Typography>
+            ) : (
+              <Typography variant="body1">
+                <Typography
+                  component="span"
+                  sx={{
+                    fontWeight: "bold",
+                    fontStyle: "revert",
+                    marginRight: "4px",
+                  }}
+                >
+                  Speaker:
+                </Typography>
+                {data?.speaker?.name}
+              </Typography>
+            )}
+          </Typography>
+        </Box>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
+        <IconButton aria-label="Edit Event">
+          <EditIcon />
         </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
+
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
