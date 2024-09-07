@@ -21,6 +21,7 @@ export interface INavbarItem {
 export interface ISuccessResponse {
   data: any;
   meta?: IMeta;
+  message?: string;
 }
 
 export interface IErrorResponse {

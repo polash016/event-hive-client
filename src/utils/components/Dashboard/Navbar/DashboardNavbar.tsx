@@ -13,14 +13,31 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { TextEffect } from "../../core/TextEffect";
+import { useGetProfileQuery } from "@/redux/api/userApi";
+import { useRouter } from "next/navigation";
+import { logOut } from "@/services/auth.service";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 
 const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function DashboardNavbar() {
+  const { data: user, isLoading } = useGetProfileQuery("");
+  const router = useRouter();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+
+  const handleLogOut = () => {
+    logOut();
+    router.push("/login");
+  };
+
+  const settings = [
+    { title: "Profile", href: "/dashboard/profile" },
+    { title: "Account", handler: handleLogOut },
+    { title: "Dashboard", handler: handleLogOut },
+    { title: "Logout", handler: handleLogOut },
+  ];
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -29,7 +46,7 @@ function DashboardNavbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
+  //onClick={handleProfileMenuOpen}
   return (
     <Container>
       <Toolbar disableGutters>
@@ -49,9 +66,9 @@ function DashboardNavbar() {
               textDecoration: "none",
             }}
           >
-            <TextEffect per="char" preset="fade">
-              Hi,Robin Welcome To Event Hive
-            </TextEffect>
+            <Typography>
+              Hi,{isLoading ? "Loading..." : user?.name} Welcome To Event Hive
+            </Typography>
           </Typography>
 
           <Typography
@@ -70,16 +87,23 @@ function DashboardNavbar() {
               textDecoration: "none",
             }}
           >
-            <TextEffect per="char" preset="fade">
-              Hi,Robin Welcome To Event Hive
-            </TextEffect>
+            <Typography>
+              Hi,{isLoading ? "Loading..." : user?.name} Welcome To Event Hive
+            </Typography>
           </Typography>
         </Box>
 
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title="Open settings">
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+            <IconButton
+              onClick={handleOpenUserMenu}
+              sx={{ p: 0 }}
+              size="large"
+              aria-label="account of current user"
+              aria-controls="primary-search-account-menu"
+              aria-haspopup="true"
+            >
+              <AccountCircle />
             </IconButton>
           </Tooltip>
           <Menu
@@ -98,11 +122,14 @@ function DashboardNavbar() {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">{setting}</Typography>
-              </MenuItem>
-            ))}
+            <MenuItem>
+              <Typography component="button">Profile</Typography>
+            </MenuItem>
+            <MenuItem>
+              <Typography component="button" onClick={handleLogOut}>
+                Logout
+              </Typography>
+            </MenuItem>
           </Menu>
         </Box>
       </Toolbar>

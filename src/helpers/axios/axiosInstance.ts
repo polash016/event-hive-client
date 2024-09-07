@@ -1,6 +1,7 @@
 import { authKey } from "@/constants/authKey";
+import { getNewAccessToken } from "@/services/auth.service";
 import { IErrorResponse, ISuccessResponse } from "@/types";
-import { getFromLocalStorage } from "@/utils/localStorage";
+import { getFromLocalStorage, saveToLocalStorage } from "@/utils/localStorage";
 import axios from "axios";
 
 const axiosInstance = axios.create();
@@ -36,17 +37,33 @@ axiosInstance.interceptors.response.use(
     const resObj: ISuccessResponse = {
       data: response?.data?.data,
       meta: response?.data?.meta,
+      message: response?.data?.message,
     };
 
     return resObj;
   },
-  function (error) {
-    const errorObj: IErrorResponse = {
-      statusCode: error?.response?.data?.statusCode || 500,
-      message: error?.response?.data?.message || "Something Went Wrong",
-      errorMessages: error?.response?.data?.message,
-    };
-    return errorObj;
+  async function (error) {
+    const config = error.config;
+
+    if (error?.response?.status === 500 && !config.sent) {
+      config.sent = true; //config.__isRetry
+
+      const res = await getNewAccessToken();
+      const accessToken = res?.data?.accessToken;
+
+      config.headers["Authorization"] = accessToken;
+
+      saveToLocalStorage(authKey, accessToken);
+
+      return axiosInstance(config);
+    } else {
+      const errorObj: IErrorResponse = {
+        statusCode: error?.response?.data?.statusCode || 500,
+        message: error?.response?.data?.message || "Something Went Wrong",
+        errorMessages: error?.response?.data?.message,
+      };
+      return errorObj;
+    }
   }
 );
 

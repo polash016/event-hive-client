@@ -54,15 +54,17 @@ const CreateAdminModal = ({ open, setOpen }: IProps) => {
   const handleCreateOrg = async (data: FieldValues) => {
     const formData = modifyPayload(data);
 
-    const res = createAdmin(formData).unwrap();
+    const res = createAdmin(formData);
 
     toast.promise(res, {
       loading: "Creating...",
       success: (res: any) => {
-        if (res?.id) {
+        if (res?.data?.id) {
           setOpen(false);
+
           return res?.message || "Admin created successfully";
         } else {
+          console.log(res);
           return res?.message;
         }
       },

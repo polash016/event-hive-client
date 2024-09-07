@@ -19,6 +19,24 @@ const eventApi = baseApi.injectEndpoints({
       }),
       providesTags: ["event"],
     }),
+    getSingleEvent: build.query({
+      query: (id) => {
+        return {
+          url: `/event/${id}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["event"],
+    }),
+    updateEvent: build.mutation({
+      query: (data) => ({
+        url: `/event/${data.id}`,
+        method: "PATCH",
+        contentType: "multipart/form-data",
+        data: data.data,
+      }),
+      invalidatesTags: ["event"],
+    }),
     deleteEvent: build.mutation({
       query: (id) => ({
         url: `/event/${id}`,
@@ -34,5 +52,7 @@ const eventApi = baseApi.injectEndpoints({
 export const {
   useCreateEventMutation,
   useGetAllEventQuery,
+  useGetSingleEventQuery,
+  useUpdateEventMutation,
   useDeleteEventMutation,
 } = eventApi;

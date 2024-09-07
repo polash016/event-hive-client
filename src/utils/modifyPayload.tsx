@@ -35,26 +35,13 @@ export const modifyEventPayload = (values: any) => {
     });
   }
 
-  // Append artist image to form data
   if (artistImg) {
     formData.append("artistImg", artistImg as File);
   }
 
-  // Append speaker image to form data
   if (speakerImg) {
     formData.append("speakerImg", speakerImg as File);
   }
-
-  //if (eventImg)
-  //formData.append("events", eventImg as Blob);
-
-  // if (artistImg)
-  //formData.append("artistImg", eventImg as Blob);
-
-  //if (speakerImg)
-  //formData.append("speakerImg", eventImg as Blob);
-
-  console.log(JSON.stringify(Object.fromEntries(formData.entries()), null, 2));
 
   return formData;
 };

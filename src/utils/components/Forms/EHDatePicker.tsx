@@ -14,6 +14,7 @@ interface IProps {
   fullWidth?: boolean;
   size?: "small" | "medium";
   sx?: SxProps;
+  defaultValue?: string;
 }
 
 const EHDatePicker = ({
@@ -23,6 +24,7 @@ const EHDatePicker = ({
   fullWidth = true,
   size = "small",
   sx,
+  defaultValue,
 }: IProps) => {
   const { control, formState } = useFormContext();
   const isError = formState.errors[name] !== undefined;
@@ -31,7 +33,11 @@ const EHDatePicker = ({
     <Controller
       control={control}
       name={name}
-      defaultValue={dayjs(new Date().toDateString())}
+      defaultValue={
+        defaultValue
+          ? dayjs(new Date(defaultValue).toDateString())
+          : dayjs(new Date().toDateString())
+      }
       render={({ field: { onChange, value, ...field } }) => {
         return (
           <LocalizationProvider dateAdapter={AdapterDayjs}>

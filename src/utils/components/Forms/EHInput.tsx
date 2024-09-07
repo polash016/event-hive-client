@@ -31,7 +31,7 @@ const EHInput = ({
         <TextField
           {...field}
           required={required}
-          placeholder={label}
+          placeholder={placeholder || label}
           type={type}
           label={label}
           variant="outlined"

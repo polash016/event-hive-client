@@ -5,14 +5,14 @@ import {
   useGetAllEventQuery,
 } from "@/redux/api/eventApi";
 import { useDebounced } from "@/redux/hooks";
-import { Box, Button, Container, Grid, Stack, TextField } from "@mui/material";
-import { DataGrid, GridColDef, GridDeleteIcon } from "@mui/x-data-grid";
+import { Box, Container, Grid, Stack, TextField } from "@mui/material";
+import { GridColDef, GridDeleteIcon } from "@mui/x-data-grid";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 import CreateEventModal from "./components/CreateEventModal";
 import EHButton from "@/utils/components/ui/EHButton";
-import EventCard from "@/utils/components/ui/EventCard/EventCard";
+import EventCard from "@/utils/components/Dashboard/EventCard/EventCard";
 
 const OrganizerPage = () => {
   const [open, setOpen] = useState(false);

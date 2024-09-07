@@ -21,7 +21,7 @@ import EHFile from "@/utils/components/Forms/EHFile";
 import { modifyEventPayload } from "@/utils/modifyPayload";
 import EHButton from "@/utils/components/ui/EHButton";
 
-const fileSchema = z
+export const fileSchema = z
   .instanceof(File)
   .refine((file) => file.size <= 5 * 1024 * 1024, {
     message: "File size should be 5MB or less",
@@ -31,27 +31,62 @@ const fileSchema = z
   //   })
   .optional();
 
-export const organizerValidation = z.object({
-  file: fileSchema,
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  admin: z.object({
+export const eventValidation = z.object({
+  events: fileSchema,
+  artistImg: fileSchema,
+  speakerImg: fileSchema,
+  event: z.object({
     name: z.string().min(1, "Please enter your name"),
-    email: z.string().email("Please enter a valid Email"),
-    gender: z.enum(["MALE", "FEMALE", "OTHERS"], {
-      errorMap: () => ({ message: "Gender is required" }),
+    description: z.string().optional(),
+    totalTicket: z.string().email("Please enter a valid Email"),
+    type: z.enum(["CONCERT", "CONFERENCE"], {
+      errorMap: () => ({ message: "Event type is required" }),
     }),
     contactNumber: z.string().regex(/^\d{11}$/, "Please enter a valid number"),
-    address: z.string().optional(),
+    ticketPrice: z.string({ required_error: "Ticket price is required" }),
   }),
+  location: z.object({
+    street: z.string({ required_error: "Street address is required" }),
+    city: z.string({ required_error: "City is required" }),
+    country: z.string().default("Bangladesh"),
+  }),
+  artist: z.object({
+    name: z.string({ required_error: "Artist name is required" }),
+    bio: z.string({ required_error: "Bio is required" }),
+    genre: z.string({ required_error: "Genre is required" }),
+  }),
+  speaker: z.object({
+    name: z.string({ required_error: "Speaker name is required" }),
+    bio: z.string({ required_error: "Bio is required" }),
+    expertise: z.string({ required_error: "Expertise is required" }),
+  }),
+  date: z.string({ required_error: "Date is required" }),
+  startTime: z.string({ required_error: "Time required" }),
 });
 
 export const defaultValues = {
-  password: "",
-  admin: {
+  event: {
     name: "",
-    email: "",
-    gender: "",
+    description: "",
+    totalTicket: "",
+    type: "",
     contactNumber: "",
+    ticketPrice: "",
+  },
+  location: {
+    street: "",
+    city: "",
+    country: "",
+  },
+  artist: {
+    name: "",
+    bio: "",
+    genre: "",
+  },
+  speaker: {
+    name: "",
+    bio: "",
+    expertise: "",
   },
 };
 
@@ -106,8 +141,8 @@ const CreateEventModal = ({ open, setOpen }: IProps) => {
       <Box>
         <EHForm
           onSubmit={handleCreateEvent}
-          // resolver={zodResolver(organizerValidation)}
-          // defaultValues={defaultValues}
+          resolver={zodResolver(eventValidation)}
+          defaultValues={defaultValues}
         >
           <Grid
             container

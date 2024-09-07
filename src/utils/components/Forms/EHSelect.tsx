@@ -19,6 +19,7 @@ interface IEHSelect {
   sx?: SxProps;
   options: string[];
   onChange?: (value: string) => void;
+  defaultValue?: string;
 }
 
 const EHSelect = ({
@@ -30,6 +31,7 @@ const EHSelect = ({
   size = "small",
   required = true,
   onChange,
+  defaultValue,
 }: IEHSelect) => {
   const { control, formState } = useFormContext();
   const isError = formState.errors[name] !== undefined;
@@ -62,7 +64,7 @@ const EHSelect = ({
           }}
         >
           {options.map((name) => (
-            <MenuItem key={name} value={name}>
+            <MenuItem key={name} defaultValue={defaultValue} value={name}>
               {name}
             </MenuItem>
           ))}
