@@ -1,13 +1,4 @@
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SxProps,
-  SelectChangeEvent,
-  Typography,
-  TextField,
-} from "@mui/material";
+import { MenuItem, SxProps, TextField } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 
 interface IEHSelect {
@@ -20,6 +11,7 @@ interface IEHSelect {
   options: string[];
   onChange?: (value: string) => void;
   defaultValue?: string;
+  disabled?: boolean;
 }
 
 const EHSelect = ({
@@ -32,9 +24,11 @@ const EHSelect = ({
   required = true,
   onChange,
   defaultValue,
+  disabled = false,
 }: IEHSelect) => {
   const { control, formState } = useFormContext();
   const isError = formState.errors[name] !== undefined;
+  console.log(control);
 
   return (
     <Controller
@@ -52,6 +46,7 @@ const EHSelect = ({
           label={label}
           select
           required={required}
+          disabled={disabled}
           size={size}
           helperText={
             isError ? (formState.errors[name]?.message as string) : ""

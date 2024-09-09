@@ -10,6 +10,7 @@ interface IEHInput {
   fullWidth?: boolean;
   sx?: SxProps;
   placeholder?: string;
+  disabled?: boolean;
 }
 
 const EHInput = ({
@@ -21,6 +22,7 @@ const EHInput = ({
   type = "text",
   sx,
   placeholder,
+  disabled = false,
 }: IEHInput) => {
   const { control } = useFormContext();
   return (
@@ -38,6 +40,7 @@ const EHInput = ({
           size={size}
           fullWidth={fullWidth}
           sx={{ ...sx }}
+          disabled={disabled}
           error={!!error?.message}
           helperText={error?.message}
         />

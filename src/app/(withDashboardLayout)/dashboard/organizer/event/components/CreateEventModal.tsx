@@ -122,7 +122,7 @@ const CreateEventModal = ({ open, setOpen }: IProps) => {
     toast.promise(res, {
       loading: "Creating...",
       success: (res: any) => {
-        if (res?.id) {
+        if (res?.data?.id) {
           setOpen(false);
           return res?.message || "Event created successfully";
         } else {

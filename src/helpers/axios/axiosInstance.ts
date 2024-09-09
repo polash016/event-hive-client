@@ -45,8 +45,9 @@ axiosInstance.interceptors.response.use(
   async function (error) {
     const config = error.config;
 
-    if (error?.response?.status === 500 && !config.sent) {
-      config.sent = true; //config.__isRetry
+    console.log(error);
+    if (error?.response?.status === 500 && !config.__isRetry) {
+      config.__isRetry = true; //config.__isRetry // config.sent
 
       const res = await getNewAccessToken();
       const accessToken = res?.data?.accessToken;

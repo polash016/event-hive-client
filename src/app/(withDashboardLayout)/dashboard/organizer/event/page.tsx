@@ -26,9 +26,9 @@ const OrganizerPage = () => {
     query["searchTerm"] = searchTerm;
   }
 
-  const { data, isLoading, error } = useGetAllEventQuery({});
+  const { data: dataObj, isLoading, error } = useGetAllEventQuery({});
 
-  console.log(data);
+  const data = dataObj?.data;
 
   console.log(error);
 
@@ -40,7 +40,7 @@ const OrganizerPage = () => {
     toast.promise(res, {
       loading: "Deleting...",
       success: (res: any) => {
-        if (res?.id) {
+        if (res?.data?.id) {
           return res.message || "Admin Deleted Successfully";
         } else {
           return res.message;
@@ -136,7 +136,7 @@ const OrganizerPage = () => {
             justifyContent="start"
           >
             {!isLoading ? (
-              data.map((event: any) => {
+              data?.map((event: any) => {
                 return (
                   <Grid key={event.id} item sm={6} md={6} lg={4}>
                     <EventCard data={event} />

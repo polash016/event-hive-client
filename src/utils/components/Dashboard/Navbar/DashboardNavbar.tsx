@@ -17,6 +17,7 @@ import { useGetProfileQuery } from "@/redux/api/userApi";
 import { useRouter } from "next/navigation";
 import { logOut } from "@/services/auth.service";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import Link from "next/link";
 
 const pages = ["Products", "Pricing", "Blog"];
 
@@ -26,6 +27,7 @@ function DashboardNavbar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+  console.log(user);
 
   const handleLogOut = () => {
     logOut();
@@ -38,6 +40,12 @@ function DashboardNavbar() {
     { title: "Dashboard", handler: handleLogOut },
     { title: "Logout", handler: handleLogOut },
   ];
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  const role: string = (user?.data?.role).toLowerCase();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -67,7 +75,8 @@ function DashboardNavbar() {
             }}
           >
             <Typography>
-              Hi,{isLoading ? "Loading..." : user?.name} Welcome To Event Hive
+              Hi,{isLoading ? "Loading..." : user?.data?.name} Welcome To Event
+              Hive
             </Typography>
           </Typography>
 
@@ -88,7 +97,8 @@ function DashboardNavbar() {
             }}
           >
             <Typography>
-              Hi,{isLoading ? "Loading..." : user?.name} Welcome To Event Hive
+              Hi,{isLoading ? "Loading..." : user?.data?.name} Welcome To Event
+              Hive
             </Typography>
           </Typography>
         </Box>
@@ -103,7 +113,11 @@ function DashboardNavbar() {
               aria-controls="primary-search-account-menu"
               aria-haspopup="true"
             >
-              <AccountCircle />
+              <Avatar
+                src={user?.data?.profilePhoto || "/default-avatar.png"}
+                alt={user?.data?.name}
+                sx={{ width: 40, height: 40 }}
+              />
             </IconButton>
           </Tooltip>
           <Menu
@@ -123,7 +137,9 @@ function DashboardNavbar() {
             onClose={handleCloseUserMenu}
           >
             <MenuItem>
-              <Typography component="button">Profile</Typography>
+              <Typography component={Link} href={`/dashboard/${role}/profile`}>
+                Profile
+              </Typography>
             </MenuItem>
             <MenuItem>
               <Typography component="button" onClick={handleLogOut}>

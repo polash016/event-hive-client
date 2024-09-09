@@ -22,6 +22,7 @@ import {
   useUpdateEventMutation,
 } from "@/redux/api/eventApi";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface IParams {
   params: {
@@ -60,7 +61,8 @@ export const eventValidation = z.object({
 
 const EditEvent = ({ params }: IParams) => {
   const { eventId } = params;
-  const { data: eventById, isLoading } = useGetSingleEventQuery(eventId);
+  const router = useRouter();
+  const { data: singleEvent, isLoading } = useGetSingleEventQuery(eventId);
   const [updateEvent] = useUpdateEventMutation();
   const [eventType, setEventType] = useState("");
 
@@ -72,6 +74,10 @@ const EditEvent = ({ params }: IParams) => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  const eventById = singleEvent?.data;
+  console.log(eventById);
+
   const handleCreateEvent = async (values: FieldValues) => {
     const { date, startTime, ...data } = values;
     console.log(date);
@@ -101,8 +107,9 @@ const EditEvent = ({ params }: IParams) => {
       loading: "Creating...",
       success: (res: any) => {
         console.log(res);
-        if (res?.id) {
-          return res?.message || "Event created successfully";
+        if (res?.data?.id) {
+          router.push("/dashboard/organizer/event");
+          return res.message || "Event updated successfully";
         } else {
           return res?.message;
         }

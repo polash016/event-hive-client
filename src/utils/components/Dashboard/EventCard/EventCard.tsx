@@ -13,6 +13,7 @@ import dayjs from "dayjs";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { Box, Stack, Tooltip } from "@mui/material";
 import Link from "next/link";
+import ImageSlider from "../ImageSlider/ImageSlider";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -44,6 +45,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 export default function EventCard({ data }: { data: any }) {
   const [expanded, setExpanded] = React.useState(false);
+  console.log(data);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -75,12 +77,17 @@ export default function EventCard({ data }: { data: any }) {
           </Typography>
         } //dayjs(data.dateTime).format('MMM D, YYYY')
       />
-      <CardMedia
-        component="img"
+
+      <ImageSlider
         sx={{ height: "300px" }}
+        images={data.images}
+        interval={5000}
+      />
+      {/* <CardMedia
+        component="img"
         image={data.images[0].imageUrl}
         alt="Events"
-      />
+      /> */}
       <CardContent>
         <Box height={100}>
           <Box

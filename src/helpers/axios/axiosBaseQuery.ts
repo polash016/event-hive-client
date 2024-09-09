@@ -32,7 +32,7 @@ export const axiosBaseQuery =
       });
       console.log(result);
       return {
-        data: result.data,
+        data: result,
       };
     } catch (axiosError) {
       const err = axiosError as AxiosError;

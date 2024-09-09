@@ -1,12 +1,4 @@
-import {
-  FormControl,
-  SxProps,
-  Typography,
-  Stack,
-  Input,
-  Button,
-  Box,
-} from "@mui/material";
+import { SxProps, Typography, Input, Box } from "@mui/material";
 
 import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -20,6 +12,7 @@ interface IEHSelect {
   fullWidth?: boolean;
   size?: "small" | "medium";
   sx?: SxProps;
+  hideInput?: boolean;
 }
 
 const VisuallyHiddenInput = styled("input")({
@@ -41,6 +34,7 @@ const EHFile = ({
   sx,
   size = "small",
   type = "file",
+  hideInput = false,
 }: IEHSelect) => {
   const { control } = useFormContext();
 
@@ -51,40 +45,55 @@ const EHFile = ({
       render={({
         field: { onChange, value, ...field },
         fieldState: { error },
-      }) => (
-        <Box
-          component="label"
-          sx={{
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            border: "1px solid gray",
-            width: "100%",
-            padding: "8px",
-            borderRadius: "4px",
-            cursor: "pointer",
-            transition: "border-color 0.2s",
-            "&:hover": {
-              borderColor: "rgba(0, 0, 0, 0.87)",
-            },
-          }}
-        >
-          <CloudUploadIcon sx={{ marginRight: "8px" }} />
-          <Typography variant="body2" component="span">
-            {label || "Upload File"}
-          </Typography>
+      }) =>
+        !hideInput ? (
+          <Box
+            component="label"
+            sx={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              border: "1px solid gray",
+              width: "100%",
+              padding: "8px",
+              borderRadius: "4px",
+              cursor: "pointer",
+              transition: "border-color 0.2s",
+              "&:hover": {
+                borderColor: "rgba(0, 0, 0, 0.87)",
+              },
+              ...sx,
+            }}
+          >
+            <CloudUploadIcon sx={{ marginRight: "8px" }} />
+            <Typography variant="body2" component="span">
+              {label || "Upload File"}
+            </Typography>
+            <Input
+              {...field}
+              size={size}
+              value={value?.fileName}
+              type={type}
+              onChange={(e) =>
+                onChange((e.target as HTMLInputElement).files?.[0])
+              }
+              sx={{ display: "none" }}
+            />
+          </Box>
+        ) : (
           <Input
             {...field}
             size={size}
             value={value?.fileName}
+            hidden={hideInput}
             type={type}
             onChange={(e) =>
               onChange((e.target as HTMLInputElement).files?.[0])
             }
             sx={{ display: "none" }}
           />
-        </Box>
-      )}
+        )
+      }
     />
   );
 };
