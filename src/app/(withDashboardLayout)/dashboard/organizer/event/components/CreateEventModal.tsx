@@ -265,6 +265,7 @@ const CreateEventModal = ({ open, setOpen }: IProps) => {
           </Grid>
 
           <EHButton
+            icon={true}
             title="Submit"
             type="submit"
             sx={{

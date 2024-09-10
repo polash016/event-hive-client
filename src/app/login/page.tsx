@@ -41,7 +41,7 @@ const Login = () => {
         }
       },
       error: (error: any) => {
-        console.log(error.message);
+        console.log(error);
         return error?.message || "Login failed";
       },
     });

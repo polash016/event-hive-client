@@ -62,8 +62,9 @@ export const eventValidation = z.object({
 const EditEvent = ({ params }: IParams) => {
   const { eventId } = params;
   const router = useRouter();
-  const { data: singleEvent, isLoading } = useGetSingleEventQuery(eventId);
-  const [updateEvent] = useUpdateEventMutation();
+  const { data: singleEvent, isLoading: getEventLoading } =
+    useGetSingleEventQuery(eventId);
+  const [updateEvent, isLoading] = useUpdateEventMutation();
   const [eventType, setEventType] = useState("");
 
   const handleTypeChange = (value: string) => {
@@ -71,12 +72,11 @@ const EditEvent = ({ params }: IParams) => {
     console.log("Selected Type:", eventType);
   };
 
-  if (isLoading) {
+  if (getEventLoading) {
     return <div>Loading...</div>;
   }
 
   const eventById = singleEvent?.data;
-  console.log(eventById);
 
   const handleCreateEvent = async (values: FieldValues) => {
     const { date, startTime, ...data } = values;
@@ -271,12 +271,15 @@ const EditEvent = ({ params }: IParams) => {
         </Grid>
 
         <EHButton
+          icon={true}
           title="Submit"
           type="submit"
+          disabled={!isLoading}
           sx={{
-            display: "block",
+            display: "flex",
+            justifyContent: "center",
             // px: "60px",
-            width: "200px",
+            width: "150px",
             mx: "auto",
             my: 4,
           }}

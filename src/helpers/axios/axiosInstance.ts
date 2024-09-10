@@ -46,17 +46,42 @@ axiosInstance.interceptors.response.use(
     const config = error.config;
 
     console.log(error);
+    // if (error.code === "ERR_NETWORK") {
+    //   saveToLocalStorage(authKey, "");
+    //   window.location.href = "/login"; // Redirect to login or handle logout logic
+    //   return Promise.reject(error);
+    // }
     if (error?.response?.status === 500 && !config.__isRetry) {
+      console.log(error);
       config.__isRetry = true; //config.__isRetry // config.sent
 
-      const res = await getNewAccessToken();
-      const accessToken = res?.data?.accessToken;
+      // const res = await getNewAccessToken();
+      // const accessToken = res?.data?.accessToken;
 
-      config.headers["Authorization"] = accessToken;
+      // config.headers["Authorization"] = accessToken;
 
-      saveToLocalStorage(authKey, accessToken);
+      // saveToLocalStorage(authKey, accessToken);
 
-      return axiosInstance(config);
+      // return axiosInstance(config);
+
+      try {
+        const res = await getNewAccessToken();
+        const accessToken = res?.data?.accessToken;
+
+        if (accessToken) {
+          config.headers["Authorization"] = accessToken;
+          saveToLocalStorage(authKey, accessToken);
+
+          return axiosInstance(config);
+        } else {
+          throw new Error("Failed to refresh token.");
+        }
+      } catch (err) {
+        console.error("Token refresh failed. Logging out user.", err);
+        saveToLocalStorage(authKey, "");
+        window.location.href = "/login"; // Redirect to login or handle logout logic
+        return Promise.reject(err);
+      }
     } else {
       const errorObj: IErrorResponse = {
         statusCode: error?.response?.data?.statusCode || 500,

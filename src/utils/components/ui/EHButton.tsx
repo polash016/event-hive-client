@@ -1,4 +1,5 @@
 import { Button, SxProps } from "@mui/material";
+import SaveIcon from "@mui/icons-material/Save";
 
 interface ButtonProps {
   title: string;
@@ -6,7 +7,9 @@ interface ButtonProps {
   type?: "button" | "reset" | "submit" | undefined;
   onClick?: any;
   component?: any;
-  href?: any;
+  href?: string;
+  icon?: boolean;
+  disabled?: boolean;
 }
 const EHButton = ({
   title,
@@ -15,13 +18,17 @@ const EHButton = ({
   onClick,
   component,
   href,
+  icon = false,
+  disabled = false,
 }: ButtonProps) => {
   return (
     <Button
       type={type}
       component={component}
+      disabled={disabled}
       href={href}
       onClick={onClick}
+      startIcon={icon && <SaveIcon />}
       sx={{
         background: "linear-gradient(90deg, #f857a6 0%, #ff5858 100%)",
         color: "white",
@@ -36,3 +43,24 @@ const EHButton = ({
   );
 };
 export default EHButton;
+
+// <LoadingButton
+// type={type}
+// // component={component}
+// // href={href}
+// onClick={onClick}
+// loading={isLoading}
+// loadingPosition="start"
+// startIcon={<SaveIcon />}
+// loadingIndicator="Saving..."
+// sx={{
+//   background: "linear-gradient(90deg, #f857a6 0%, #ff5858 100%)",
+//   color: "white",
+//   "&:hover": {
+//     background: "linear-gradient(90deg, #ff5858 0%, #f857a6 100%)",
+//   },
+//   ...sx,
+// }}
+// >
+// Save
+// </LoadingButton>

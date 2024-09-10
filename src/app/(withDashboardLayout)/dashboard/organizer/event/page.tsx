@@ -26,11 +26,9 @@ const OrganizerPage = () => {
     query["searchTerm"] = searchTerm;
   }
 
-  const { data: dataObj, isLoading, error } = useGetAllEventQuery({});
+  const { data: dataObj, isLoading, error } = useGetAllEventQuery({ ...query });
 
   const data = dataObj?.data;
-
-  console.log(error);
 
   const handleDelete = (id: string) => {
     const res = deleteAdmin(id).unwrap();
@@ -101,20 +99,7 @@ const OrganizerPage = () => {
           <Stack my={5} direction="row" justifyContent="space-between">
             <Box>
               <EHButton title="Create Event" onClick={() => setOpen(!open)} />
-              {/* <Button
-                onClick={() => setOpen(!open)}
-                sx={{
-                  background:
-                    "linear-gradient(90deg, #f857a6 0%, #ff5858 100%)",
-                  color: "white",
-                  "&:hover": {
-                    background:
-                      "linear-gradient(90deg, #ff5858 0%, #f857a6 100%)",
-                  },
-                }}
-              >
-                Create Event
-              </Button> */}
+
               <CreateEventModal
                 open={open}
                 setOpen={setOpen}

@@ -28,24 +28,17 @@ function DashboardNavbar() {
     null
   );
   console.log(user);
+  let role: string;
+  if (isLoading) {
+    return <div>Loading...</div>;
+  } else {
+    role = "ORGANIZER"; //(user?.data?.role).toLowerCase();
+  }
 
   const handleLogOut = () => {
     logOut();
     router.push("/login");
   };
-
-  const settings = [
-    { title: "Profile", href: "/dashboard/profile" },
-    { title: "Account", handler: handleLogOut },
-    { title: "Dashboard", handler: handleLogOut },
-    { title: "Logout", handler: handleLogOut },
-  ];
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  const role: string = (user?.data?.role).toLowerCase();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
