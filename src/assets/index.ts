@@ -2,6 +2,7 @@ const assets = {
   images: {
     banner1: require("./images/banner.webp"),
     banner2: require("./images/banner2.avif"),
+    no_images: require("./images/no_image.png"),
   },
   logo: {
     navBar_logo: require("./icons/logo.png"),

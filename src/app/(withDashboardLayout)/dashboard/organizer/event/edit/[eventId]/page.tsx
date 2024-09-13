@@ -1,5 +1,4 @@
 "use client";
-import { EventType } from "@/constants/common";
 import EHDatePicker from "@/utils/components/Forms/EHDatePicker";
 import EHFile from "@/utils/components/Forms/EHFile";
 import EHFiles from "@/utils/components/Forms/EHFiles";
@@ -12,7 +11,7 @@ import { formatDate } from "@/utils/formatDate";
 import { formatTime } from "@/utils/formateTime";
 import { modifyEventPayload } from "@/utils/modifyPayload";
 import { Box, Grid, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FieldValues } from "react-hook-form";
 import { fileSchema } from "../../components/CreateEventModal";
 import { z } from "zod";
@@ -23,6 +22,8 @@ import {
 } from "@/redux/api/eventApi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useGetCategoriesQuery } from "@/redux/api/categoryApi";
+import EHMultipleSelect from "@/utils/components/Forms/EHMultipleSelect";
 
 interface IParams {
   params: {
@@ -64,19 +65,16 @@ const EditEvent = ({ params }: IParams) => {
   const router = useRouter();
   const { data: singleEvent, isLoading: getEventLoading } =
     useGetSingleEventQuery(eventId);
+  const { data, isLoading: categoryLoading } = useGetCategoriesQuery("");
   const [updateEvent, isLoading] = useUpdateEventMutation();
-  const [eventType, setEventType] = useState("");
-
-  const handleTypeChange = (value: string) => {
-    setEventType(value);
-    console.log("Selected Type:", eventType);
-  };
 
   if (getEventLoading) {
     return <div>Loading...</div>;
   }
 
   const eventById = singleEvent?.data;
+
+  console.log(eventById);
 
   const handleCreateEvent = async (values: FieldValues) => {
     const { date, startTime, ...data } = values;
@@ -100,6 +98,8 @@ const EditEvent = ({ params }: IParams) => {
       data.event.ticketPrice = Number(data.event.ticketPrice);
 
     const formData = modifyEventPayload(data);
+
+    console.log(data);
 
     const res = updateEvent({ id: eventId, data: formData }).unwrap();
 
@@ -128,7 +128,6 @@ const EditEvent = ({ params }: IParams) => {
       name: eventById?.name || "",
       description: eventById?.description || "",
       totalTicket: eventById?.totalTicket || 0,
-      type: eventById?.type || "",
       ticketPrice: eventById?.ticketPrice || 0,
     },
     location: {
@@ -136,15 +135,10 @@ const EditEvent = ({ params }: IParams) => {
       city: eventById?.location?.city || "",
       country: eventById?.location?.country || "",
     },
-    artist: {
-      name: eventById?.artist?.name || "",
-      bio: eventById?.artist?.bio || "",
-      genre: eventById?.artist?.genre || "",
-    },
-    speaker: {
-      name: eventById?.speaker?.name || null,
-      bio: eventById?.speaker?.bio || null,
-      expertise: eventById?.speaker?.expertise || null,
+    guest: {
+      name: eventById?.guest?.name || null,
+      bio: eventById?.guest?.bio || null,
+      expertise: eventById?.guest?.expertise || null,
     },
   };
 
@@ -207,14 +201,11 @@ const EditEvent = ({ params }: IParams) => {
           </Grid>
 
           <Grid item md={4} sm={6}>
-            <EHSelect
-              name="event.type"
-              label="Event Type"
-              options={EventType}
-              fullWidth={true}
-              defaultValue={eventById?.type}
-              required={false}
-              onChange={handleTypeChange}
+            <EHMultipleSelect
+              name="categories"
+              label="Event Categories"
+              isLoading={categoryLoading}
+              data={data?.data}
             />
           </Grid>
 
@@ -229,45 +220,23 @@ const EditEvent = ({ params }: IParams) => {
           <Grid item md={4} sm={6}>
             <EHInput name="location.country" type="text" label="Country" />
           </Grid>
-          {eventById?.type === "CONCERT" ? (
-            <>
-              <Grid item md={4} sm={6}>
-                <EHInput name="artist.name" type="text" label="Artist Name" />
-              </Grid>
-              <Grid item md={4} sm={6}>
-                <EHInput name="artist.bio" type="text" label="Artist Bio" />
-              </Grid>
-              <Grid item md={4} sm={6}>
-                <EHInput
-                  name="artist.genre"
-                  type="text"
-                  label="Artists Genre"
-                />
-              </Grid>
-              <Grid item md={4} sm={6}>
-                <EHFile name="artistImg" label="Artist Image" />
-              </Grid>
-            </>
-          ) : eventById?.type === "CONFERENCE" ? (
-            <>
-              <Grid item md={4} sm={6}>
-                <EHInput name="speaker.name" type="text" label="Speaker Name" />
-              </Grid>
-              <Grid item md={4} sm={6}>
-                <EHInput name="speaker.bio" type="text" label="Speaker Bio" />
-              </Grid>
-              <Grid item md={4} sm={6}>
-                <EHInput
-                  name="speaker.expertise"
-                  type="text"
-                  label="Speakers Expertise"
-                />
-              </Grid>
-              <Grid item md={4} sm={6}>
-                <EHFile name="speakerImg" label="Speaker Image" />
-              </Grid>
-            </>
-          ) : null}
+
+          <Grid item md={4} sm={6}>
+            <EHInput name="guest.name" type="text" label="Guest Name" />
+          </Grid>
+          <Grid item md={4} sm={6}>
+            <EHInput name="guest.bio" type="text" label="Guest Bio" />
+          </Grid>
+          <Grid item md={4} sm={6}>
+            <EHInput
+              name="guest.expertise"
+              type="text"
+              label="Guest's Expertise"
+            />
+          </Grid>
+          <Grid item md={4} sm={6}>
+            <EHFile name="guestImg" label="Guest Image" />
+          </Grid>
         </Grid>
 
         <EHButton

@@ -10,6 +10,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import SideBar from "./SideBar/SideBar";
 import DashboardNavbar from "./Navbar/DashboardNavbar";
+import { isLoggedIn } from "@/services/auth.service";
 
 const drawerWidth = 240;
 

@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import EHInput from "@/utils/components/Forms/EHInput";
 import EHSelect from "@/utils/components/Forms/EHSelect";
-import { EventType, Gender } from "@/constants/common";
 import { IProps } from "../../../admin/components/CreateOrgModal";
 import { useCreateEventMutation } from "@/redux/api/eventApi";
 import EHDatePicker from "@/utils/components/Forms/EHDatePicker";
@@ -20,6 +19,8 @@ import { useState } from "react";
 import EHFile from "@/utils/components/Forms/EHFile";
 import { modifyEventPayload } from "@/utils/modifyPayload";
 import EHButton from "@/utils/components/ui/EHButton";
+import { useGetCategoriesQuery } from "@/redux/api/categoryApi";
+import EHMultipleSelect from "@/utils/components/Forms/EHMultipleSelect";
 
 export const fileSchema = z
   .instanceof(File)
@@ -38,7 +39,7 @@ export const eventValidation = z.object({
   event: z.object({
     name: z.string().min(1, "Please enter your name"),
     description: z.string().optional(),
-    totalTicket: z.string().email("Please enter a valid Email"),
+    totalTicket: z.string({ required_error: "Please enter a valid number" }),
     type: z.enum(["CONCERT", "CONFERENCE"], {
       errorMap: () => ({ message: "Event type is required" }),
     }),
@@ -50,18 +51,13 @@ export const eventValidation = z.object({
     city: z.string({ required_error: "City is required" }),
     country: z.string().default("Bangladesh"),
   }),
-  artist: z.object({
-    name: z.string({ required_error: "Artist name is required" }),
-    bio: z.string({ required_error: "Bio is required" }),
-    genre: z.string({ required_error: "Genre is required" }),
-  }),
-  speaker: z.object({
-    name: z.string({ required_error: "Speaker name is required" }),
+  guest: z.object({
+    name: z.string({ required_error: "Guest name is required" }),
     bio: z.string({ required_error: "Bio is required" }),
     expertise: z.string({ required_error: "Expertise is required" }),
   }),
-  date: z.string({ required_error: "Date is required" }),
-  startTime: z.string({ required_error: "Time required" }),
+  // date: z.string({ required_error: "Date is required" }),
+  // startTime: z.string({ required_error: "Time required" }),
 });
 
 export const defaultValues = {
@@ -69,8 +65,6 @@ export const defaultValues = {
     name: "",
     description: "",
     totalTicket: "",
-    type: "",
-    contactNumber: "",
     ticketPrice: "",
   },
   location: {
@@ -78,12 +72,7 @@ export const defaultValues = {
     city: "",
     country: "",
   },
-  artist: {
-    name: "",
-    bio: "",
-    genre: "",
-  },
-  speaker: {
+  guest: {
     name: "",
     bio: "",
     expertise: "",
@@ -91,15 +80,13 @@ export const defaultValues = {
 };
 
 const CreateEventModal = ({ open, setOpen }: IProps) => {
-  const [eventType, setEventType] = useState("");
+  const { data, isLoading } = useGetCategoriesQuery("");
   const [createEvent] = useCreateEventMutation();
-  const handleTypeChange = (value: string) => {
-    setEventType(value);
-    console.log("Selected Type:", eventType);
-  };
 
   const handleCreateEvent = async (values: FieldValues) => {
     const { date, startTime, ...data } = values;
+
+    console.log({ values });
 
     const formattedDate = formatDate(date);
 
@@ -141,7 +128,7 @@ const CreateEventModal = ({ open, setOpen }: IProps) => {
       <Box>
         <EHForm
           onSubmit={handleCreateEvent}
-          resolver={zodResolver(eventValidation)}
+          // resolver={zodResolver(eventValidation)}
           defaultValues={defaultValues}
         >
           <Grid
@@ -195,12 +182,11 @@ const CreateEventModal = ({ open, setOpen }: IProps) => {
             </Grid>
 
             <Grid item md={4} sm={6}>
-              <EHSelect
-                name="event.type"
-                label="Event Type"
-                options={EventType}
-                fullWidth={true}
-                onChange={handleTypeChange}
+              <EHMultipleSelect
+                name="categories"
+                label="Event Categories"
+                isLoading={isLoading}
+                data={data?.data}
               />
             </Grid>
 
@@ -219,49 +205,23 @@ const CreateEventModal = ({ open, setOpen }: IProps) => {
             <Grid item md={4} sm={6}>
               <EHInput name="location.country" type="text" label="Country" />
             </Grid>
-            {eventType === "CONCERT" ? (
-              <>
-                <Grid item md={4} sm={6}>
-                  <EHInput name="artist.name" type="text" label="Artist Name" />
-                </Grid>
-                <Grid item md={4} sm={6}>
-                  <EHInput name="artist.bio" type="text" label="Artist Bio" />
-                </Grid>
-                <Grid item md={4} sm={6}>
-                  <EHInput
-                    name="artist.genre"
-                    type="text"
-                    label="Artists Genre"
-                  />
-                </Grid>
-                <Grid item md={4} sm={6}>
-                  <EHFile name="artistImg" label="Artist Image" />
-                </Grid>
-              </>
-            ) : eventType === "CONFERENCE" ? (
-              <>
-                <Grid item md={4} sm={6}>
-                  <EHInput
-                    name="speaker.name"
-                    type="text"
-                    label="Speaker Name"
-                  />
-                </Grid>
-                <Grid item md={4} sm={6}>
-                  <EHInput name="speaker.bio" type="text" label="Speaker Bio" />
-                </Grid>
-                <Grid item md={4} sm={6}>
-                  <EHInput
-                    name="speaker.expertise"
-                    type="text"
-                    label="Speakers Expertise"
-                  />
-                </Grid>
-                <Grid item md={4} sm={6}>
-                  <EHFile name="speakerImg" label="Speaker Image" />
-                </Grid>
-              </>
-            ) : null}
+
+            <Grid item md={4} sm={6}>
+              <EHInput name="guest.name" type="text" label="Guest Name" />
+            </Grid>
+            <Grid item md={4} sm={6}>
+              <EHInput name="guest.bio" type="text" label="Guest Bio" />
+            </Grid>
+            <Grid item md={4} sm={6}>
+              <EHInput
+                name="guest.expertise"
+                type="text"
+                label="Guest's Expertise"
+              />
+            </Grid>
+            <Grid item md={4} sm={6}>
+              <EHFile name="guestImg" label="Guest Image" />
+            </Grid>
           </Grid>
 
           <EHButton
@@ -269,7 +229,8 @@ const CreateEventModal = ({ open, setOpen }: IProps) => {
             title="Submit"
             type="submit"
             sx={{
-              display: "block",
+              display: "flex",
+              justifyContent: "center",
               // px: "60px",
               width: "200px",
               mx: "auto",

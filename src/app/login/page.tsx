@@ -6,12 +6,21 @@ import EHForm from "@/utils/components/Forms/EHForm";
 import EHInput from "@/utils/components/Forms/EHInput";
 import EHButton from "@/utils/components/ui/EHButton";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
+import GoogleIcon from "@mui/icons-material/Google";
 import { z } from "zod";
 
 export const loginValidation = z.object({
@@ -45,25 +54,15 @@ const Login = () => {
         return error?.message || "Login failed";
       },
     });
+  };
+  const handleGoogleLogin = async () => {
+    // const res = await fetch(`http://localhost:3000/api/v1/auth/google`, {
+    //   method: "GET",
+    // });
+    // const data = await res.json();
+    // console.log(data);
 
-    // try {
-    //   const res = await loginUser(data);
-
-    //   console.log(res);
-
-    //   if (res?.data?.accessToken) {
-    //     storeUserInfo(res.data.accessToken);
-
-    //     toast.success(res.message);
-
-    //     router.push("/");
-    //   } else {
-    //     toast.error(res.message);
-    //   }
-    // } catch (error: any) {
-    //   toast.error(error.message);
-    //   console.log(error.message);
-    // }
+    window.location.href = "http://localhost:3000/api/v1/auth/google";
   };
 
   return (
@@ -146,6 +145,15 @@ const Login = () => {
                 }}
               />
             </EHForm>
+
+            <Box sx={{ my: 4 }}>
+              <IconButton onClick={() => handleGoogleLogin()}>
+                <GoogleIcon
+                  color="info"
+                  sx={{ width: "40px", height: "40px" }}
+                />
+              </IconButton>
+            </Box>
 
             <Typography component="p">
               Need an account?{" "}

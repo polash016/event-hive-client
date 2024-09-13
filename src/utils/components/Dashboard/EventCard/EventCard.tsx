@@ -14,6 +14,8 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { Box, Stack, Tooltip } from "@mui/material";
 import Link from "next/link";
 import ImageSlider from "../ImageSlider/ImageSlider";
+import { useDeleteEventMutation } from "@/redux/api/eventApi";
+import { toast } from "sonner";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -45,17 +47,36 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 export default function EventCard({ data }: { data: any }) {
   const [expanded, setExpanded] = React.useState(false);
-  console.log(data);
+  const [deleteEvent] = useDeleteEventMutation();
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
+  };
+
+  const handleEventDelete = async () => {
+    const res = deleteEvent(data.id).unwrap();
+
+    toast.promise(res, {
+      loading: "Deleting...",
+      success: (res: any) => {
+        if (res?.data?.id) {
+          return res.message || "Event Deleted successfully";
+        } else {
+          return res?.message;
+        }
+      },
+      error: (error: any) => {
+        console.log(error.message);
+        return error?.message || "Something went wrong";
+      },
+    });
   };
 
   return (
     <Card sx={{ maxWidth: 400, height: 600, my: 2 }}>
       <CardHeader
         action={
-          <IconButton aria-label="settings">
+          <IconButton aria-label="settings" onClick={() => handleEventDelete()}>
             <DeleteIcon
               color="inherit"
               sx={{
@@ -144,35 +165,19 @@ export default function EventCard({ data }: { data: any }) {
             </Typography>
 
             <Typography my="5px">
-              {data?.type === "CONCERT" ? (
-                <Typography fontSize={15} variant="body1">
-                  <Typography
-                    component="span"
-                    sx={{
-                      fontWeight: "bold",
-                      fontStyle: "revert",
-                      marginRight: "4px",
-                    }}
-                  >
-                    Artist:
-                  </Typography>
-                  {data?.artist?.name}
+              <Typography fontSize={15} variant="body1">
+                <Typography
+                  component="span"
+                  sx={{
+                    fontWeight: "bold",
+                    fontStyle: "revert",
+                    marginRight: "4px",
+                  }}
+                >
+                  Guest:
                 </Typography>
-              ) : (
-                <Typography variant="body1">
-                  <Typography
-                    component="span"
-                    sx={{
-                      fontWeight: "bold",
-                      fontStyle: "revert",
-                      marginRight: "4px",
-                    }}
-                  >
-                    Speaker:
-                  </Typography>
-                  {data?.speaker?.name}
-                </Typography>
-              )}
+                {data?.guest?.name}
+              </Typography>
             </Typography>
           </Box>
         </Box>

@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Box, Button, SxProps } from "@mui/material";
 import Image from "next/image";
+import assets from "@/assets";
 
 const ImageSlider = ({
   images,
@@ -56,7 +57,7 @@ const ImageSlider = ({
         Prev
       </Button> */}
       <Image
-        src={images[currentIndex].imageUrl}
+        src={images[currentIndex]?.imageUrl || assets.images.no_images}
         alt={`Slide ${currentIndex + 1}`}
         layout="fill"
         objectFit="cover"

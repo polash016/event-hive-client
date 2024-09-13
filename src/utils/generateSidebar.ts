@@ -70,8 +70,8 @@ export const generateSidebar = (role: IUserRole): INavbarItem[] => {
           icon: EditCalendarIcon,
         },
         {
-          title: "Manage Events",
-          path: `${role}/manage-events`,
+          title: "Category",
+          path: `${role}/category`,
           icon: EventIcon,
         }
       );
