@@ -10,7 +10,7 @@ const ImageSlider = ({
   interval = 3000,
 }: {
   images: any;
-  sx: SxProps;
+  sx?: SxProps;
   interval?: number;
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -30,7 +30,6 @@ const ImageSlider = ({
   useEffect(() => {
     const timer = setInterval(handleNext, interval);
 
-    // Cleanup interval on component unmount
     return () => clearInterval(timer);
   }, [currentIndex, interval, handleNext]);
 

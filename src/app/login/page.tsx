@@ -56,13 +56,8 @@ const Login = () => {
     });
   };
   const handleGoogleLogin = async () => {
-    // const res = await fetch(`http://localhost:3000/api/v1/auth/google`, {
-    //   method: "GET",
-    // });
-    // const data = await res.json();
-    // console.log(data);
-
-    window.location.href = "http://localhost:3000/api/v1/auth/google";
+    window.location.href =
+      "https://event-hive-srm9.onrender.com/api/v1/auth/google";
   };
 
   return (

@@ -1,79 +1,149 @@
 "use client";
 import assets from "@/assets";
-import { Slide, Stack, Typography, useScrollTrigger } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  Slide,
+  Stack,
+  Typography,
+  useScrollTrigger,
+} from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
-
-function useScrollDirectionTrigger() {
-  const trigger = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: 0,
-  });
-
-  return trigger;
-}
+import MenuIcon from "@mui/icons-material/Menu";
+import { useState } from "react";
 
 const NavBar = () => {
-  const trigger = useScrollDirectionTrigger();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const AuthButton = dynamic(() => import("../../ui/AuthButton/AuthButton"), {
     ssr: false,
   });
 
   return (
-    <Slide appear={false} direction="down" in={!trigger}>
-      <Stack
-        py={4}
-        px={1}
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        bgcolor="#202030"
-      >
-        <Stack direction="row" gap={2}>
-          <Typography component={Link} href="/" fontWeight={600} variant="h5">
-            <Image
-              src={assets.logo.navBar_logo}
-              width={200}
-              height={80}
-              alt="logo"
-            ></Image>
+    <AppBar
+      position="fixed"
+      color="inherit"
+      sx={{ backgroundColor: "black", width: "100%" }}
+    >
+      <Box>
+        <Stack
+          py={2}
+          px={1}
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          //   bgcolor="#202030"
+        >
+          <Stack direction="row" gap={2}>
+            <IconButton
+              aria-label="menu"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="inherit"
+              sx={{
+                display: {
+                  md: "none",
+                },
+                mr: 2,
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography component={Link} href="/" fontWeight={600} variant="h5">
+              <Image
+                src={assets.logo.navBar_logo}
+                width={200}
+                height={80}
+                alt="logo"
+              ></Image>
 
-            {/* Event{" "}
+              {/* Event{" "}
             <Box component="span" color="primary.main">
               Hive
             </Box> */}
-          </Typography>
+            </Typography>
+          </Stack>
+          <Stack
+            sx={{
+              display: {
+                xs: "none",
+                sm: "none",
+                md: "flex",
+              },
+            }}
+            direction="row"
+            gap={4}
+            justifyContent="space-between"
+          >
+            <Typography component={Link} href="/" color="white">
+              Home
+            </Typography>
+            <Typography component={Link} href="/events" color="white">
+              Events
+            </Typography>
+            <Typography component={Link} href="/about" color="white">
+              About
+            </Typography>
+            <Typography component={Link} href="/contact" color="white">
+              Contact
+            </Typography>
+          </Stack>
+          <Stack>
+            <AuthButton />
+          </Stack>
         </Stack>
-        <Stack direction="row" gap={4} justifyContent="space-between">
-          <Typography component={Link} href="/home" color="white">
-            Home
-          </Typography>
-          <Typography component={Link} href="/events" color="white">
-            Events
-          </Typography>
-          <Typography component={Link} href="/about" color="white">
-            About
-          </Typography>
-          <Typography component={Link} href="/contact" color="white">
-            Contact
-          </Typography>
-        </Stack>
-        <Stack>
-          {/* {isLogged ? (
-            <Button onClick={handleLogOut} sx={{ textTransform: "none" }}>
-              Log Out
-            </Button>
-          ) : (
-            <Button component={Link} href="/login">
-              Login
-            </Button>
-          )} */}
-          <AuthButton />
-        </Stack>
-      </Stack>
-    </Slide>
+
+        <motion.div
+          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, x: -100 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <Typography component={Link} href="/" color="white">
+              <MenuItem>Home</MenuItem>
+            </Typography>
+            <Typography component={Link} href="/events" color="white">
+              <MenuItem>Events</MenuItem>
+            </Typography>
+            <Typography component={Link} href="/about" color="white">
+              <MenuItem>About</MenuItem>
+            </Typography>
+            <Typography component={Link} href="/contact" color="white">
+              <MenuItem>Contact</MenuItem>
+            </Typography>
+          </Menu>
+        </motion.div>
+      </Box>
+    </AppBar>
   );
 };
 export default NavBar;

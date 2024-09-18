@@ -19,11 +19,8 @@ export const modifyEventPayload = (values: any) => {
   const eventImg = obj["events"];
   delete obj["events"];
 
-  const artistImg = obj["artistImg"];
-  delete obj["artistImg"];
-
-  const speakerImg = obj["speakerImg"];
-  delete obj["speakerImg"];
+  const guestImg = obj["guestImg"];
+  delete obj["guestImg"];
 
   const data = JSON.stringify(obj);
 
@@ -35,12 +32,8 @@ export const modifyEventPayload = (values: any) => {
     });
   }
 
-  if (artistImg) {
-    formData.append("artistImg", artistImg as File);
-  }
-
-  if (speakerImg) {
-    formData.append("speakerImg", speakerImg as File);
+  if (guestImg) {
+    formData.append("guestImg", guestImg as File);
   }
 
   return formData;

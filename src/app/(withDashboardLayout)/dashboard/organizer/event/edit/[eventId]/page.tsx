@@ -78,9 +78,7 @@ const EditEvent = ({ params }: IParams) => {
 
   const handleCreateEvent = async (values: FieldValues) => {
     const { date, startTime, ...data } = values;
-    console.log(date);
 
-    console.log(values);
     const formattedDate =
       date !== Date.now() ? formatDate(date) : formatDate(eventById?.dateTime);
     const time = startTime
@@ -97,9 +95,8 @@ const EditEvent = ({ params }: IParams) => {
     if (data.event.ticketPrice)
       data.event.ticketPrice = Number(data.event.ticketPrice);
 
-    const formData = modifyEventPayload(data);
-
     console.log(data);
+    const formData = modifyEventPayload(data);
 
     const res = updateEvent({ id: eventId, data: formData }).unwrap();
 
