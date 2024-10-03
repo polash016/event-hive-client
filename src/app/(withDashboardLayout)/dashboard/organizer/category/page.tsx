@@ -26,14 +26,14 @@ import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-export const categoryValidation = z.object({
+const categoryValidation = z.object({
   name: z
     .string()
     .min(1, "Please enter category name")
     .regex(/^[A-Z]/, "Category name must start with a capital letter"),
 });
 
-export const defaultValues = {
+const defaultValues = {
   name: "",
 };
 

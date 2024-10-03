@@ -36,7 +36,7 @@ export const logOut = () => {
 
 export const getNewAccessToken = async () => {
   return await axiosInstance({
-    url: "https://event-hive-srm9.onrender.com/api/v1/auth/refresh-token",
+    url: "http://localhost:3000/api/v1/auth/refresh-token",
     method: "POST",
     headers: {
       "Content-Type": "application/json",

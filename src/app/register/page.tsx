@@ -34,7 +34,7 @@ const fileSchema = z
   })
   .optional();
 
-export const registerValidation = z.object({
+const registerValidation = z.object({
   file: fileSchema,
   password: z.string().min(6, "Password must be at least 6 characters"),
   attendee: z.object({
@@ -47,7 +47,7 @@ export const registerValidation = z.object({
   }),
 });
 
-export const defaultValues = {
+const defaultValues = {
   password: "",
   attendee: {
     name: "",

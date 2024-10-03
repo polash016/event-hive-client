@@ -23,7 +23,7 @@ import { toast } from "sonner";
 import GoogleIcon from "@mui/icons-material/Google";
 import { z } from "zod";
 
-export const loginValidation = z.object({
+const loginValidation = z.object({
   email: z.string().email("Please enter a valid Email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
@@ -56,8 +56,7 @@ const Login = () => {
     });
   };
   const handleGoogleLogin = async () => {
-    window.location.href =
-      "https://event-hive-srm9.onrender.com/api/v1/auth/google";
+    window.location.href = "http://localhost:3000/api/v1/auth/google";
   };
 
   return (

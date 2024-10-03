@@ -16,6 +16,8 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PeopleIcon from "@mui/icons-material/People";
 import Link from "next/link";
+import { loadStripe } from "@stripe/stripe-js";
+import { useInitPaymentMutation } from "@/redux/api/paymentApi";
 
 const StyledCard = styled(motion(Card))(({ theme }) => ({
   maxWidth: 345,
@@ -67,6 +69,21 @@ const StyledButton = styled(MuiButton)(({ theme }) => ({
 const MotionButton = motion(StyledButton);
 
 const EventHomeCard = ({ event }: { event: any }) => {
+  const [initPayment] = useInitPaymentMutation();
+  const handlePayment = async () => {
+    const stripe = await loadStripe(
+      "pk_test_51Q0VGlEMhjSajFzMD80TZXJ31R1xaLCSJKgZ1yrFL5NidJFyio2kmjbTV0tlCQrUfrfV3XR8R4TLPddzGUHnVI7s005umFAjgX"
+    );
+    const paymentIntent = await initPayment(event.id);
+    console.log(paymentIntent);
+    const result = await stripe?.redirectToCheckout({
+      sessionId: paymentIntent.data.id,
+    });
+    // console.log({ result });
+    if (result?.error) {
+      console.log(result.error);
+    }
+  };
   return (
     <StyledCard whileHover={{ scale: 1.03 }} transition={{ duration: 0.3 }}>
       <EventImage>
@@ -126,6 +143,7 @@ const EventHomeCard = ({ event }: { event: any }) => {
           size="small"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          onClick={handlePayment}
         >
           Buy
         </MotionButton>

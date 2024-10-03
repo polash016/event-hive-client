@@ -31,7 +31,7 @@ interface IParams {
   };
 }
 
-export const eventValidation = z.object({
+const eventValidation = z.object({
   events: fileSchema,
   artistImg: fileSchema,
   speakerImg: fileSchema,
