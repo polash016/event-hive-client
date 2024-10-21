@@ -9,30 +9,23 @@ import EHSelect from "@/utils/components/Forms/EHSelect";
 import EHButton from "@/utils/components/ui/EHButton";
 import { modifyPayload } from "@/utils/modifyPayload";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Box,
-  Button,
-  Container,
-  FormControl,
-  Grid,
-  Input,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Container, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-const fileSchema = z
-  .instanceof(File)
-  .refine((file) => file.size <= 5 * 1024 * 1024, {
-    message: "File size should be 5MB or less",
-  })
-  .optional();
+const fileSchema =
+  typeof window !== "undefined"
+    ? z
+        .instanceof(File)
+        .refine((file) => file.size <= 2 * 1024 * 1024, {
+          message: "File size should be 2MB or less",
+        })
+        .optional()
+    : z.any().optional();
 
 const registerValidation = z.object({
   file: fileSchema,
@@ -61,8 +54,6 @@ const Register = () => {
   const router = useRouter();
 
   const handleRegister = async (data: FieldValues) => {
-    console.log(data);
-
     const postData = modifyPayload(data);
 
     const res = registerAttendee(postData);

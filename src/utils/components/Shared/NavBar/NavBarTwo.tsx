@@ -31,7 +31,7 @@ const NavbarTwo: React.FC = () => {
     <AppBar
       position="fixed"
       color="inherit"
-      sx={{ backgroundColor: "black", width: "100%" }}
+      sx={{ backgroundColor: "black", width: "100%", py: 4 }}
     >
       {/* <Toolbar> */}
       <Stack

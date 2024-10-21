@@ -6,6 +6,9 @@ import {
   removeFromLocalStorage,
   saveToLocalStorage,
 } from "@/utils/localStorage";
+import { deleteCookies } from "./actions/deleteCookies";
+import { useRouter } from "next/navigation";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export const storeUserInfo = (accessToken: string) => {
   return saveToLocalStorage(authKey, accessToken);
@@ -30,13 +33,17 @@ export const isLoggedIn = () => {
   }
 };
 
-export const logOut = () => {
-  return removeFromLocalStorage(authKey);
+export const logOut = (router: AppRouterInstance) => {
+  removeFromLocalStorage(authKey);
+  deleteCookies([authKey, "refreshToken"]);
+
+  router.push("/");
+  router.refresh();
 };
 
 export const getNewAccessToken = async () => {
   return await axiosInstance({
-    url: "http://localhost:3000/api/v1/auth/refresh-token",
+    url: "https://event-hive-two.vercel.app/api/v1/auth/refresh-token",
     method: "POST",
     headers: {
       "Content-Type": "application/json",

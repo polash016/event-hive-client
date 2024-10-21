@@ -17,6 +17,7 @@ import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
+import { getUserInfo } from "@/services/auth.service";
 
 const NavBar = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -33,15 +34,18 @@ const NavBar = () => {
     ssr: false,
   });
 
+  const user = getUserInfo();
+
+  console.log(user);
   return (
     <AppBar
       position="fixed"
       color="inherit"
-      sx={{ backgroundColor: "black", width: "100%" }}
+      sx={{ backgroundColor: "black", width: "100%", py: 2 }}
     >
       <Box>
         <Stack
-          py={2}
+          py={0}
           px={1}
           direction="row"
           justifyContent="space-between"
@@ -94,14 +98,29 @@ const NavBar = () => {
               Home
             </Typography>
             <Typography component={Link} href="/events" color="white">
-              Events
+              All Events
             </Typography>
             <Typography component={Link} href="/about" color="white">
               About
             </Typography>
-            <Typography component={Link} href="/contact" color="white">
-              Contact
-            </Typography>
+
+            {user && user?.role === "attendee" ? (
+              <Typography component={Link} href="/my-events" color="white">
+                My Events
+              </Typography>
+            ) : (
+              user && (
+                <Typography
+                  component={Link}
+                  href={`/dashboard/${
+                    user?.role === "super_admin" ? "super-admin" : user?.role
+                  }`}
+                  color="white"
+                >
+                  Dashboard
+                </Typography>
+              )
+            )}
           </Stack>
           <Stack>
             <AuthButton />

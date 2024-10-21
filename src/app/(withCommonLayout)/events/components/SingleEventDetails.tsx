@@ -37,7 +37,7 @@ const SingleEventDetails = ({ data }: { data: any }) => {
   } = data;
 
   const hasEventFinished = new Date(dateTime) < new Date();
-  console.log(hasEventFinished);
+
   return (
     <Box
       component={motion.div}

@@ -1,13 +1,6 @@
 "use client";
 import assets from "@/assets";
-import {
-  Box,
-  Button,
-  Container,
-  Stack,
-  TextField,
-  CircularProgress,
-} from "@mui/material";
+import { Box, Container, Stack, TextField } from "@mui/material";
 import Image from "next/image";
 import { useState } from "react";
 import CreateOrgModal from "../components/CreateOrgModal";
@@ -43,17 +36,13 @@ const CreateOrganizer = () => {
   //   setPagination(newPagination);
   // };
 
-  console.log(data);
-
   const handleDelete = (id: string) => {
     const res = deleteOrganizer(id).unwrap();
 
     toast.promise(res, {
       loading: "Deleting...",
       success: (res: any) => {
-        console.log(res);
-
-        if (res?.id) {
+        if (res?.data?.id) {
           return res.message || "User Deleted Successfully";
         } else {
           return res.message;
@@ -130,7 +119,7 @@ const CreateOrganizer = () => {
           {!isLoading ? (
             <Box>
               <DataGrid
-                rows={data}
+                rows={data?.data}
                 columns={columns}
                 initialState={{
                   pagination: {

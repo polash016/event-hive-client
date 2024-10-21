@@ -20,16 +20,19 @@ import { loadStripe } from "@stripe/stripe-js";
 import { useInitPaymentMutation } from "@/redux/api/paymentApi";
 
 const StyledCard = styled(motion(Card))(({ theme }) => ({
-  maxWidth: 345,
-  margin: "auto",
+  maxWidth: 400,
+  margin: "20px auto",
   transition: "0.3s",
   minWidth: 300,
-  boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
+  backgroundColor: "rgba(90, 90, 90, 0.2)",
+  color: "#ffffff", // Equivalent of text-card-foreground
+  borderRadius: theme.shape.borderRadius * 2,
+  padding: 20,
+  border: "1px solid #333", // Equivalent of border
+  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", // Equivalent of shadow-sm
   "&:hover": {
     boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)",
   },
-  backgroundColor: "#1e1e1e",
-  color: "#ffffff",
 }));
 
 const CardContentArea = styled(CardContent)({
@@ -85,7 +88,11 @@ const EventHomeCard = ({ event }: { event: any }) => {
     }
   };
   return (
-    <StyledCard whileHover={{ scale: 1.03 }} transition={{ duration: 0.3 }}>
+    <StyledCard
+      whileHover={{ scale: 1.03 }}
+      transition={{ duration: 0.3 }}
+      sx={{ height: "500px" }}
+    >
       <EventImage>
         <Image
           src={event.images[0].imageUrl}
@@ -125,7 +132,7 @@ const EventHomeCard = ({ event }: { event: any }) => {
             {event.ticketSold} going
           </Typography>
         </InfoItem>
-        <Typography variant="body2" color="#bbbbbb">
+        {/* <Typography variant="body2" color="#bbbbbb">
           Guest: {event.guest.name}
         </Typography>
         <Box mt={1}>
@@ -136,7 +143,7 @@ const EventHomeCard = ({ event }: { event: any }) => {
               size="small"
             />
           ))}
-        </Box>
+        </Box> */}
       </CardContentArea>
       <CardActions sx={{ justifyContent: "space-between", px: 2, pb: 2 }}>
         <MotionButton
@@ -147,7 +154,7 @@ const EventHomeCard = ({ event }: { event: any }) => {
         >
           Buy
         </MotionButton>
-        <Link href={`/event/${event.id}`}>
+        <Link href={`/events/${event.id}`}>
           <MotionButton
             size="small"
             whileHover={{ scale: 1.05 }}

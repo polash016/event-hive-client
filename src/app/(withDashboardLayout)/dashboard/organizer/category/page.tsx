@@ -1,5 +1,4 @@
 "use client";
-
 import assets from "@/assets";
 import {
   useCreateCategoryMutation,
@@ -11,14 +10,7 @@ import EHInput from "@/utils/components/Forms/EHInput";
 import EHModal from "@/utils/components/Shared/EHModal/EHModal";
 import EHButton from "@/utils/components/ui/EHButton";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Box,
-  CircularProgress,
-  Container,
-  Grid,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Container, Grid, Stack, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridDeleteIcon } from "@mui/x-data-grid";
 import Image from "next/image";
 import { useState } from "react";

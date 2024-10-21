@@ -12,6 +12,7 @@ import {
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDebounced } from "@/redux/hooks";
+import EHButton from "@/utils/components/ui/EHButton";
 
 const CreateAdmin = () => {
   const [open, setOpen] = useState(false);
@@ -26,10 +27,6 @@ const CreateAdmin = () => {
   }
 
   const { data, isLoading, error } = useGetAllAdminQuery({});
-
-  console.log(data);
-
-  console.log(error);
 
   const handleDelete = (id: string) => {
     const res = deleteAdmin(id).unwrap();
@@ -97,7 +94,7 @@ const CreateAdmin = () => {
 
           <Stack my={5} direction="row" justifyContent="space-between">
             <Box>
-              <Button onClick={() => setOpen(!open)}>Create Admin</Button>
+              <EHButton title="Create Admin" onClick={() => setOpen(!open)} />
               <CreateAdminModal
                 open={open}
                 setOpen={setOpen}
@@ -114,7 +111,7 @@ const CreateAdmin = () => {
           {!isLoading ? (
             <Box>
               <DataGrid
-                rows={data}
+                rows={data.data}
                 columns={columns}
                 initialState={{
                   pagination: {

@@ -1,4 +1,4 @@
-import { useGetProfileQuery } from "@/redux/api/userApi";
+"use client";
 import OrganizerProfile from "@/utils/components/Dashboard/Profile/OrganizerProfile";
 
 const OrganizerProfilePage = () => {

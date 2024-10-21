@@ -1,3 +1,4 @@
+"use client";
 const Attendee = () => {
   return <div>Attendee Dashboard</div>;
 };

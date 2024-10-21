@@ -1,3 +1,4 @@
+"use client";
 import { isLoggedIn, logOut } from "@/services/auth.service";
 import { Button } from "@mui/material";
 import Link from "next/link";
@@ -6,11 +7,11 @@ import EHButton from "../EHButton";
 
 const AuthButton = () => {
   const isLogged = isLoggedIn();
+
   const router = useRouter();
 
   const handleLogOut = () => {
-    logOut();
-    router.refresh();
+    logOut(router);
   };
   return (
     <>

@@ -5,8 +5,6 @@ import {
   ListItemText,
 } from "@mui/material";
 import Link from "next/link";
-import MailIcon from "@mui/icons-material/Mail";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import { INavbarItem } from "@/types";
 import { usePathname } from "next/navigation";
 

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const HeroContainer = styled(Box)({
   position: "relative",
-  height: "100vh",
+  height: "90vh",
   display: "flex",
   alignItems: "center",
   overflow: "hidden",
@@ -16,7 +16,7 @@ const BackgroundImage = styled(Box)({
   left: 0,
   right: 0,
   bottom: 0,
-  backgroundImage: `url('https://res.cloudinary.com/daa4x7pfh/image/upload/v1723928191/pexels-wendywei-1540406_qtrges.jpg')`,
+  backgroundImage: `url('https://images.pexels.com/photos/4577179/pexels-photo-4577179.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')`,
   backgroundSize: "cover",
   backgroundPosition: "center",
   filter: "brightness(0.3)",

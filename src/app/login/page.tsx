@@ -34,31 +34,45 @@ const Login = () => {
   const handleLogin = async (data: FieldValues) => {
     console.log(data);
 
-    const res = loginUser(data);
-
-    toast.promise(res, {
-      loading: "Logging in...",
-      success: (res: any) => {
+    try {
+      const res = await loginUser(data);
+      if (res?.data?.accessToken) {
+        toast.success(res?.message);
+        storeUserInfo(res?.data?.accessToken);
+        router.push("/dashboard");
+      } else {
+        // setError(res.message);
         console.log(res);
+      }
+    } catch (err: any) {
+      console.error(err.message);
+    }
 
-        if (res?.data?.accessToken) {
-          storeUserInfo(res.data.accessToken);
-          router.push("/dashboard");
-          return res.message;
-        } else {
-          return res.message;
-        }
-      },
-      error: (error: any) => {
-        console.log(error);
-        return error?.message || "Login failed";
-      },
-    });
+    // toast.promise(res, {
+    //   loading: "Logging in...",
+    //   success: (res: any) => {
+    //     console.log(res);
+
+    //     if (res?.data?.accessToken) {
+    //       storeUserInfo(res.data.accessToken);
+    //       // router.push("/dashboard");
+    //       return res.message;
+    //     } else {
+    //       return res.message;
+    //     }
+    //   },
+    //   error: (error: any) => {
+    //     console.log(error);
+    //     return error?.message || "Login failed";
+    //   },
+    // });
   };
   const handleGoogleLogin = async () => {
-    window.location.href = "http://localhost:3000/api/v1/auth/google";
+    if (typeof window !== "undefined") {
+      window.location.href =
+        "https://event-hive-two.vercel.app/api/v1/auth/google";
+    }
   };
-
   return (
     <Container
       sx={{

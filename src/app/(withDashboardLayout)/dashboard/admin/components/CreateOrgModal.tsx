@@ -1,3 +1,4 @@
+"use client";
 import { Gender } from "@/constants/common";
 import { useCreateOrganizerMutation } from "@/redux/api/organizerApi";
 import EHFile from "@/utils/components/Forms/EHFile";
@@ -8,7 +9,7 @@ import EHModal from "@/utils/components/Shared/EHModal/EHModal";
 import EHButton from "@/utils/components/ui/EHButton";
 import { modifyPayload } from "@/utils/modifyPayload";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -18,15 +19,25 @@ export interface IProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const fileSchema = z
-  .instanceof(File)
-  .refine((file) => file.size <= 5 * 1024 * 1024, {
-    message: "File size should be 5MB or less",
-  })
-  //   .refine((file) => ["image/jpeg", "image/png"].includes(file.type), {
-  //     message: "Only JPEG or PNG files are allowed",
-  //   })
-  .optional();
+// const fileSchema = z
+//   .instanceof(File)
+//   .refine((file) => file.size <= 5 * 1024 * 1024, {
+//     message: "File size should be 5MB or less",
+//   })
+//   //   .refine((file) => ["image/jpeg", "image/png"].includes(file.type), {
+//   //     message: "Only JPEG or PNG files are allowed",
+//   //   })
+//   .optional();
+
+const fileSchema =
+  typeof window !== "undefined"
+    ? z
+        .instanceof(File)
+        .refine((file) => file.size <= 2 * 1024 * 1024, {
+          message: "File size should be 2MB or less",
+        })
+        .optional()
+    : z.any().optional();
 
 export const organizerValidation = z.object({
   file: fileSchema,
@@ -67,7 +78,7 @@ const CreateOrgModal = ({ open, setOpen }: IProps) => {
     toast.promise(res, {
       loading: "Creating...",
       success: (res: any) => {
-        if (res?.id) {
+        if (res?.data?.id) {
           setOpen(false);
           return res?.message || "Organizer created successfully";
         } else {

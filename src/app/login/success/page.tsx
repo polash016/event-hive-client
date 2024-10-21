@@ -1,4 +1,5 @@
 "use client";
+import setAccessToken from "@/helpers/setAccessToken";
 import { storeUserInfo } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -18,7 +19,7 @@ const LoginSuccess = () => {
     if (accessToken) {
       storeUserInfo(accessToken);
       console.log("User logged in successfully:", accessToken);
-      router.push("/dashboard");
+      setAccessToken(accessToken, { redirect: "/dashboard" });
     } else if (error) {
       // Handle the error case
       console.error("Error during login:", error);

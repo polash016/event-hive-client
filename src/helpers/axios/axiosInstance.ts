@@ -3,6 +3,7 @@ import { getNewAccessToken } from "@/services/auth.service";
 import { IErrorResponse, ISuccessResponse } from "@/types";
 import { getFromLocalStorage, saveToLocalStorage } from "@/utils/localStorage";
 import axios from "axios";
+import setAccessToken from "../setAccessToken";
 
 const axiosInstance = axios.create();
 
@@ -55,12 +56,14 @@ axiosInstance.interceptors.response.use(
       console.log(error);
       config.__isRetry = true; //config.__isRetry // config.sent
 
-      // const res = await getNewAccessToken();
-      // const accessToken = res?.data?.accessToken;
+      const res = await getNewAccessToken();
+      const accessToken = res?.data?.accessToken;
 
-      // config.headers["Authorization"] = accessToken;
+      config.headers["Authorization"] = accessToken;
 
-      // saveToLocalStorage(authKey, accessToken);
+      saveToLocalStorage(authKey, accessToken);
+
+      setAccessToken(accessToken);
 
       // return axiosInstance(config);
 
@@ -79,7 +82,11 @@ axiosInstance.interceptors.response.use(
       } catch (err) {
         console.error("Token refresh failed. Logging out user.", err);
         saveToLocalStorage(authKey, "");
-        window.location.href = "/login"; // Redirect to login or handle logout logic
+
+        if (typeof window !== "undefined") {
+          window.location.href = "/login";
+        }
+
         return Promise.reject(err);
       }
     } else {

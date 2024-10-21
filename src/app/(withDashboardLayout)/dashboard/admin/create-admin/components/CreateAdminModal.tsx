@@ -1,3 +1,4 @@
+"use client";
 import { z } from "zod";
 import { IProps } from "../../components/CreateOrgModal";
 import EHModal from "@/utils/components/Shared/EHModal/EHModal";
@@ -14,15 +15,15 @@ import EHFile from "@/utils/components/Forms/EHFile";
 import { Gender } from "@/constants/common";
 import EHButton from "@/utils/components/ui/EHButton";
 
-const fileSchema = z
-  .instanceof(File)
-  .refine((file) => file.size <= 5 * 1024 * 1024, {
-    message: "File size should be 5MB or less",
-  })
-  //   .refine((file) => ["image/jpeg", "image/png"].includes(file.type), {
-  //     message: "Only JPEG or PNG files are allowed",
-  //   })
-  .optional();
+const fileSchema =
+  typeof window !== "undefined"
+    ? z
+        .instanceof(File)
+        .refine((file) => file.size <= 2 * 1024 * 1024, {
+          message: "File size should be 2MB or less",
+        })
+        .optional()
+    : z.any().optional();
 
 export const organizerValidation = z.object({
   file: fileSchema,

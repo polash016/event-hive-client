@@ -1,3 +1,4 @@
+"use client";
 export const modifyPayload = (values: any) => {
   const formData = new FormData();
   const obj = { ...values };

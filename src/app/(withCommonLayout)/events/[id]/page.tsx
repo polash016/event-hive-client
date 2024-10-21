@@ -1,6 +1,7 @@
 "use client";
 import { useGetSingleEventQuery } from "@/redux/api/eventApi";
 import SingleEventDetails from "../components/SingleEventDetails";
+import { Box } from "@mui/material";
 
 const EventDetails = ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -9,9 +10,9 @@ const EventDetails = ({ params }: { params: { id: string } }) => {
   if (isLoading) return <h1>Loading event...</h1>;
 
   return (
-    <div>
+    <Box my={6}>
       <SingleEventDetails data={data?.data} />
-    </div>
+    </Box>
   );
 };
 export default EventDetails;
