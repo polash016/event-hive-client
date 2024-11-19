@@ -5,7 +5,7 @@ import setAccessToken from "@/helpers/setAccessToken";
 export const loginUser = async (payload: FieldValues) => {
   try {
     const res = await fetch(
-      `https://event-hive-two.vercel.app/api/v1/auth/login`,
+      `${process.env.NEXT_PUBLIC_EVENT_HIVE_API_URL}/auth/login`,
       {
         method: "POST",
         headers: {

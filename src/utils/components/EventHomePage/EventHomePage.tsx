@@ -40,7 +40,7 @@ const EventHomePage = () => {
         )}
       </Grid>
 
-      {!isLoading && (
+      {!isLoading && data?.data?.length > 0 && (
         <Box
           sx={{
             display: "flex",

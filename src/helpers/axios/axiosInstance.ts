@@ -5,7 +5,7 @@ import { getFromLocalStorage, saveToLocalStorage } from "@/utils/localStorage";
 import axios from "axios";
 import setAccessToken from "../setAccessToken";
 
-const axiosInstance = axios.create();
+const axiosInstance = axios.create({ withCredentials: true });
 
 axiosInstance.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -46,29 +46,35 @@ axiosInstance.interceptors.response.use(
   async function (error) {
     const config = error.config;
 
-    console.log(error);
+    console.log("isRetry", config.__isRetry);
     // if (error.code === "ERR_NETWORK") {
     //   saveToLocalStorage(authKey, "");
     //   window.location.href = "/login"; // Redirect to login or handle logout logic
     //   return Promise.reject(error);
     // }
-    if (error?.response?.status === 500 && !config.__isRetry) {
+    if (error?.response?.status === 577) {
       console.log(error);
+
+      console.log("before isretry true");
       config.__isRetry = true; //config.__isRetry // config.sent
 
-      const res = await getNewAccessToken();
-      const accessToken = res?.data?.accessToken;
+      // const res = await getNewAccessToken();
+      // const accessToken = res?.data?.accessToken;
 
-      config.headers["Authorization"] = accessToken;
+      // console.log("acstkngnrtr", accessToken);
 
-      saveToLocalStorage(authKey, accessToken);
+      // config.headers["Authorization"] = accessToken;
 
-      setAccessToken(accessToken);
+      // saveToLocalStorage(authKey, accessToken);
+
+      // setAccessToken(accessToken);
 
       // return axiosInstance(config);
 
       try {
+        console.log("after isretry true");
         const res = await getNewAccessToken();
+
         const accessToken = res?.data?.accessToken;
 
         if (accessToken) {

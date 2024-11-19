@@ -44,6 +44,15 @@ const eventApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["event"],
     }),
+    getMyEvents: build.query({
+      query: (id) => {
+        return {
+          url: `/event/my-events`,
+          method: "GET",
+        };
+      },
+      providesTags: ["event"],
+    }),
   }),
 
   overrideExisting: true,
@@ -55,4 +64,5 @@ export const {
   useGetSingleEventQuery,
   useUpdateEventMutation,
   useDeleteEventMutation,
+  useGetMyEventsQuery,
 } = eventApi;

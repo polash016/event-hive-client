@@ -69,8 +69,7 @@ const Login = () => {
   };
   const handleGoogleLogin = async () => {
     if (typeof window !== "undefined") {
-      window.location.href =
-        "https://event-hive-two.vercel.app/api/v1/auth/google";
+      window.location.href = `${process.env.NEXT_PUBLIC_EVENT_HIVE_API_URL}/auth/google`;
     }
   };
   return (

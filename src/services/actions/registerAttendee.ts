@@ -2,7 +2,7 @@
 
 export const registerAttendee = async (formData: FormData) => {
   const res = await fetch(
-    `${process.env.EVENT_HIVE_API_URL}/user/create-attendee`,
+    `${process.env.NEXT_PUBLIC_EVENT_HIVE_API_URL}/user/create-attendee`,
     {
       method: "POST",
       body: formData,

@@ -6,7 +6,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 export const baseApi = createApi({
   reducerPath: "api",
   baseQuery: axiosBaseQuery({
-    baseUrl: "https://event-hive-two.vercel.app/api/v1",
+    baseUrl: process.env.NEXT_PUBLIC_EVENT_HIVE_API_URL as string,
   }),
   endpoints: (builder) => ({}),
   tagTypes: ["organizer", "admin", "event", "user", "category", "payment"],

@@ -7,7 +7,6 @@ import {
   saveToLocalStorage,
 } from "@/utils/localStorage";
 import { deleteCookies } from "./actions/deleteCookies";
-import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export const storeUserInfo = (accessToken: string) => {
@@ -42,12 +41,16 @@ export const logOut = (router: AppRouterInstance) => {
 };
 
 export const getNewAccessToken = async () => {
-  return await axiosInstance({
-    url: "https://event-hive-two.vercel.app/api/v1/auth/refresh-token",
+  const res = await axiosInstance({
+    url: `${process.env.NEXT_PUBLIC_EVENT_HIVE_API_URL}/auth/refresh-token`,
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     withCredentials: true,
   });
+
+  console.log("generete access token", res);
+
+  return res;
 };

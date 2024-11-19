@@ -1,9 +1,20 @@
 import React from "react";
-import { Box, Typography, Paper, Grid, Chip, Avatar } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Paper,
+  Grid,
+  Chip,
+  Avatar,
+  Button,
+} from "@mui/material";
 import { styled } from "@mui/system";
 import Image from "next/image";
 import ImageSlider from "@/utils/components/Dashboard/ImageSlider/ImageSlider";
 import { motion } from "framer-motion";
+import { useInitPaymentMutation } from "@/redux/api/paymentApi";
+import { useRouter } from "next/navigation";
+import WrappedEventDetails from "./BuyEvent";
 
 const ImageSliderPlaceholder = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -21,8 +32,24 @@ const GuestCard = styled(Paper)(({ theme }) => ({
   boxShadow: "1px 5px 5px #d2d2d2, -5px -5px 15px #4d4d4d",
 }));
 
+const StyledButton = styled(Button)(({ theme }) => ({
+  backgroundColor: "#3a506b",
+  color: "#ffffff",
+  "&:hover": {
+    backgroundColor: "#5b7193",
+  },
+  // padding: "5px 20px 5px 20px",
+  width: "100px",
+  transition: "background-color 0.3s",
+}));
+
+const MotionButton = motion(StyledButton);
+
 const SingleEventDetails = ({ data }: { data: any }) => {
+  const router = useRouter();
+  const [initPayment] = useInitPaymentMutation();
   const {
+    id,
     name,
     description,
     dateTime,
@@ -37,6 +64,14 @@ const SingleEventDetails = ({ data }: { data: any }) => {
   } = data;
 
   const hasEventFinished = new Date(dateTime) < new Date();
+
+  const handlePayment = async () => {
+    const response = await initPayment(id).unwrap();
+    console.log(response);
+    if (response.data.paymentUrl) {
+      router.push(response.data.paymentUrl);
+    }
+  };
 
   return (
     <Box
@@ -166,8 +201,32 @@ const SingleEventDetails = ({ data }: { data: any }) => {
           </GuestCard>
         </Grid>
       </Grid>
+
+      {/* <Typography sx={{ display: "flex", justifyContent: "center", my: 4 }}>
+        <MotionButton
+          size="small"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handlePayment}
+        >
+          Buy
+        </MotionButton>
+      </Typography> */}
+
+      <Typography component="a" href={`/events/payment/${id}`}>
+        {/* <WrappedEventDetails id={id}></WrappedEventDetails> */}
+
+        <Button>Buy</Button>
+      </Typography>
     </Box>
   );
 };
 
 export default SingleEventDetails;
+
+{
+  /* <Typography component="a" href={`/events/payment/${id}`}>
+        {/* <WrappedEventDetails id={id}></WrappedEventDetails> */
+}
+//   <Button>Buy</Button>
+// </Typography> */}
