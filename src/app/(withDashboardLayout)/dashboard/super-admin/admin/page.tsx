@@ -3,7 +3,6 @@ import assets from "@/assets";
 import { Box, Button, Container, Stack, TextField } from "@mui/material";
 import Image from "next/image";
 import { toast } from "sonner";
-import CreateAdminModal from "./components/CreateAdminModal";
 import { useState } from "react";
 import {
   useDeleteAdminMutation,
@@ -13,6 +12,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDebounced } from "@/redux/hooks";
 import EHButton from "@/utils/components/ui/EHButton";
+import CreateAdminModal from "../../admin/admin/components/CreateAdminModal";
 
 const CreateAdmin = () => {
   const [open, setOpen] = useState(false);
