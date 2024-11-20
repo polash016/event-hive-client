@@ -36,16 +36,19 @@ const Login = () => {
 
     try {
       const res = await loginUser(data);
+      console.log(res);
       if (res?.data?.accessToken) {
         toast.success(res?.message);
         storeUserInfo(res?.data?.accessToken);
-        router.push("/dashboard");
+        router.push("/");
       } else {
         // setError(res.message);
+        toast.error(res.message) || "Login Failed! Try Again ";
         console.log(res);
       }
     } catch (err: any) {
-      console.error(err.message);
+      console.error(err);
+      toast.error("Login Failed! Try Again");
     }
 
     // toast.promise(res, {

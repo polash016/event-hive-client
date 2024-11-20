@@ -1,10 +1,10 @@
 "use client";
-import OrganizerProfile from "@/utils/components/Dashboard/Profile/OrganizerProfile";
+import UserProfile from "@/utils/components/Dashboard/Profile/UserProfile";
 
 const OrganizerProfilePage = () => {
   return (
     <div>
-      <OrganizerProfile />
+      <UserProfile />
     </div>
   );
 };

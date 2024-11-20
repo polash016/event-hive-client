@@ -9,6 +9,29 @@ const userApi = baseApi.injectEndpoints({
       }),
       providesTags: ["user"],
     }),
+
+    getAllUsers: build.query({
+      query: (params) => ({
+        url: "/user",
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["user"],
+    }),
+
+    updateStatus: build.mutation({
+      query: (data) => {
+        console.log("api data", data);
+        return {
+          url: `/user/${data.id}/status`,
+          method: "PATCH",
+          contentType: "application/json",
+          data: { status: data.status },
+        };
+      },
+      invalidatesTags: ["user"],
+    }),
+
     updateProfile: build.mutation({
       query: (data) => ({
         url: "/user/update-profile",
@@ -23,4 +46,9 @@ const userApi = baseApi.injectEndpoints({
   overrideExisting: true,
 });
 
-export const { useGetProfileQuery, useUpdateProfileMutation } = userApi;
+export const {
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+  useGetAllUsersQuery,
+  useUpdateStatusMutation,
+} = userApi;

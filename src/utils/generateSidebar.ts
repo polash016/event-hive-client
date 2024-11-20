@@ -22,6 +22,16 @@ export const generateSidebar = (role: IUserRole): INavbarItem[] => {
           title: "Manage Users",
           path: `${role}/manage-users`,
           icon: PeopleAltIcon,
+        },
+        {
+          title: "Admin",
+          path: `${role}/admin`,
+          icon: AddCircleIcon,
+        },
+        {
+          title: "Organizer",
+          path: `${role}/organizer`,
+          icon: PeopleAltIcon,
         }
       );
 
@@ -41,17 +51,12 @@ export const generateSidebar = (role: IUserRole): INavbarItem[] => {
         },
         {
           title: "Admin",
-          path: `${role}/create-admin`,
+          path: `${role}/admin`,
           icon: AddCircleIcon,
         },
         {
           title: "Organizer",
-          path: `${role}/create-organizer`,
-          icon: PeopleAltIcon,
-        },
-        {
-          title: "Create Organizer",
-          path: `${role}/manage-users`,
+          path: `${role}/organizer`,
           icon: PeopleAltIcon,
         }
       );
@@ -73,26 +78,6 @@ export const generateSidebar = (role: IUserRole): INavbarItem[] => {
           title: "Category",
           path: `${role}/category`,
           icon: EventIcon,
-        }
-      );
-      break;
-
-    case USER_ROLE.ATTENDEE:
-      roleMenus.push(
-        {
-          title: "Dashboard",
-          path: `${role}`,
-          icon: DashboardIcon,
-        },
-        {
-          title: "My Event",
-          path: `${role}/my-event`,
-          icon: EventIcon,
-        },
-        {
-          title: "Payment History",
-          path: `${role}/payment-history`,
-          icon: PaymentsIcon,
         }
       );
       break;

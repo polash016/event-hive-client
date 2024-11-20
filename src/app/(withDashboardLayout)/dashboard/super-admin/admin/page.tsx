@@ -1,50 +1,40 @@
 "use client";
 import assets from "@/assets";
-import {
-  useDeleteEventMutation,
-  useGetAllEventQuery,
-  useGetMyEventsQuery,
-} from "@/redux/api/eventApi";
-import { useDebounced } from "@/redux/hooks";
-import { Box, Container, Grid, Stack, TextField } from "@mui/material";
-import { GridColDef, GridDeleteIcon } from "@mui/x-data-grid";
+import { Box, Button, Container, Stack, TextField } from "@mui/material";
 import Image from "next/image";
-import { useState } from "react";
 import { toast } from "sonner";
-import CreateEventModal from "./components/CreateEventModal";
+import CreateAdminModal from "./components/CreateAdminModal";
+import { useState } from "react";
+import {
+  useDeleteAdminMutation,
+  useGetAllAdminQuery,
+} from "@/redux/api/adminApi";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useDebounced } from "@/redux/hooks";
 import EHButton from "@/utils/components/ui/EHButton";
-import EventCard from "@/utils/components/Dashboard/EventCard/EventCard";
-import { useGetMyCreatedEventsQuery } from "@/redux/api/organizerApi";
 
-const OrganizerPage = () => {
+const CreateAdmin = () => {
   const [open, setOpen] = useState(false);
-  const [deleteAdmin] = useDeleteEventMutation();
+  const [deleteAdmin] = useDeleteAdminMutation();
   const [searchTerm, setSearchTerm] = useState("");
   const query: Record<string, any> = {};
 
-  const debouncedTerm = useDebounced({ searchQuery: searchTerm, delay: 200 });
+  const debouncedTerm = useDebounced({ searchQuery: searchTerm, delay: 600 });
 
   if (!!debouncedTerm) {
     query["searchTerm"] = searchTerm;
   }
 
-  const {
-    data: dataObj,
-    isLoading,
-    error,
-  } = useGetMyCreatedEventsQuery({ ...query });
-
-  const data = dataObj?.data;
+  const { data, isLoading, error } = useGetAllAdminQuery({});
 
   const handleDelete = (id: string) => {
     const res = deleteAdmin(id).unwrap();
 
-    // dayjs(date).format("hh:mm a")
-
     toast.promise(res, {
       loading: "Deleting...",
       success: (res: any) => {
-        if (res?.data?.id) {
+        if (res?.id) {
           return res.message || "Admin Deleted Successfully";
         } else {
           return res.message;
@@ -70,7 +60,7 @@ const OrganizerPage = () => {
       renderCell: ({ row }) => {
         return (
           <button onClick={() => handleDelete(row.id)}>
-            <GridDeleteIcon color="error" />
+            <DeleteIcon color="error" />
           </button>
         );
       },
@@ -104,12 +94,11 @@ const OrganizerPage = () => {
 
           <Stack my={5} direction="row" justifyContent="space-between">
             <Box>
-              <EHButton title="Create Event" onClick={() => setOpen(!open)} />
-
-              <CreateEventModal
+              <EHButton title="Create Admin" onClick={() => setOpen(!open)} />
+              <CreateAdminModal
                 open={open}
                 setOpen={setOpen}
-              ></CreateEventModal>
+              ></CreateAdminModal>
             </Box>
             <Box>
               <TextField
@@ -119,29 +108,36 @@ const OrganizerPage = () => {
               ></TextField>
             </Box>
           </Stack>
-          <Grid
-            container
-            spacing={4}
-            my={1}
-            alignItems="center"
-            justifyContent="start"
-          >
-            {!isLoading ? (
-              data?.map((event: any) => {
-                return (
-                  <Grid key={event.id} item sm={6} md={6} lg={4}>
-                    <EventCard data={event} />
-                  </Grid>
-                );
-              })
-            ) : (
-              // <CircularProgress color="success" />
-              <h1>Loading.....</h1>
-            )}
-          </Grid>
+          {!isLoading ? (
+            <Box>
+              <DataGrid
+                rows={data.data}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: { page: 0, pageSize: 5 },
+                  },
+                }}
+                pageSizeOptions={[5, 10]}
+                autoHeight
+                sx={{
+                  "& .MuiDataGrid-columnHeaders": {
+                    backgroundColor: "#f5f5f5",
+                  },
+                  "& .MuiDataGrid-cell": {
+                    whiteSpace: "normal",
+                    wordWrap: "break-word",
+                  },
+                }}
+              />
+            </Box>
+          ) : (
+            // <CircularProgress color="success" />
+            <h1>Loading.....</h1>
+          )}
         </Box>
       </Stack>
     </Container>
   );
 };
-export default OrganizerPage;
+export default CreateAdmin;

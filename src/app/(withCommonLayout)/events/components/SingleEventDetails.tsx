@@ -14,7 +14,6 @@ import ImageSlider from "@/utils/components/Dashboard/ImageSlider/ImageSlider";
 import { motion } from "framer-motion";
 import { useInitPaymentMutation } from "@/redux/api/paymentApi";
 import { useRouter } from "next/navigation";
-import WrappedEventDetails from "./BuyEvent";
 
 const ImageSliderPlaceholder = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -38,7 +37,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   "&:hover": {
     backgroundColor: "#5b7193",
   },
-  // padding: "5px 20px 5px 20px",
+  padding: "7px 25px 7px 25px",
   width: "100px",
   transition: "background-color 0.3s",
 }));
@@ -65,22 +64,25 @@ const SingleEventDetails = ({ data }: { data: any }) => {
 
   const hasEventFinished = new Date(dateTime) < new Date();
 
-  const handlePayment = async () => {
-    const response = await initPayment(id).unwrap();
-    console.log(response);
-    if (response.data.paymentUrl) {
-      router.push(response.data.paymentUrl);
-    }
-  };
+  //for ssl commerz
+
+  // const handlePayment = async () => {
+  //   const response = await initPayment(id).unwrap();
+  //   console.log(response);
+  //   if (response.data.paymentUrl) {
+  //     router.push(response.data.paymentUrl);
+  //   }
+  // };
 
   return (
     <Box
       component={motion.div}
       sx={{
-        maxWidth: 1000,
+        maxWidth: "70%",
+        minHeight: "screen",
         margin: "auto",
         padding: 3,
-        height: 1000,
+        marginTop: 12,
         backgroundColor: "#333333",
       }}
     >
@@ -213,10 +215,24 @@ const SingleEventDetails = ({ data }: { data: any }) => {
         </MotionButton>
       </Typography> */}
 
-      <Typography component="a" href={`/events/payment/${id}`}>
+      <Typography
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        mt={4}
+        component="a"
+        href={`/events/payment/${id}`}
+      >
         {/* <WrappedEventDetails id={id}></WrappedEventDetails> */}
 
-        <Button>Buy</Button>
+        <MotionButton
+          size="small"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          // onClick={handlePayment}
+        >
+          Buy
+        </MotionButton>
       </Typography>
     </Box>
   );

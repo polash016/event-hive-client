@@ -45,15 +45,6 @@ const EventImage = styled(Box)({
   overflow: "hidden",
 });
 
-const EventChip = styled(Chip)(({ theme }) => ({
-  margin: theme.spacing(0.5),
-  backgroundColor: "#4a4a4a",
-  color: "#ffffff",
-  "&:hover": {
-    backgroundColor: "#5a5a5a",
-  },
-}));
-
 const InfoItem = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
@@ -146,14 +137,15 @@ const EventHomeCard = ({ event }: { event: any }) => {
         </Box> */}
       </CardContentArea>
       <CardActions sx={{ justifyContent: "space-between", px: 2, pb: 2 }}>
-        <MotionButton
-          size="small"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handlePayment}
-        >
-          Buy
-        </MotionButton>
+        <Typography component="a" href={`/events/payment/${event.id}`}>
+          <MotionButton
+            size="small"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Buy
+          </MotionButton>
+        </Typography>
         <Link href={`/events/${event.id}`}>
           <MotionButton
             size="small"

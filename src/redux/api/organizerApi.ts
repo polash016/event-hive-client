@@ -19,6 +19,24 @@ const organizerApi = baseApi.injectEndpoints({
       }),
       providesTags: ["organizer"],
     }),
+
+    getOrganizerStats: build.query({
+      query: () => ({
+        url: "/organizer/statistics",
+        method: "GET",
+      }),
+      providesTags: ["organizer"],
+    }),
+
+    getMyCreatedEvents: build.query({
+      query: (params) => ({
+        url: "/organizer/events",
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["event"],
+    }),
+
     deleteOrganizer: build.mutation({
       query: (id) => ({
         url: `/organizer/${id}`,
@@ -43,4 +61,6 @@ export const {
   useCreateOrganizerMutation,
   useGetAllOrganizerQuery,
   useDeleteOrganizerMutation,
+  useGetMyCreatedEventsQuery,
+  useGetOrganizerStatsQuery,
 } = organizerApi;

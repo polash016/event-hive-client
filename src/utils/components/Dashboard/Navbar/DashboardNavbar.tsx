@@ -106,7 +106,6 @@ function DashboardNavbar() {
           </Tooltip>
           <Menu
             sx={{ mt: "45px" }}
-            id="menu-appbar"
             anchorEl={anchorElUser}
             anchorOrigin={{
               vertical: "top",
@@ -121,7 +120,7 @@ function DashboardNavbar() {
             onClose={handleCloseUserMenu}
           >
             <MenuItem>
-              <Typography component={Link} href={`/dashboard/${role}/profile`}>
+              <Typography component={Link} href={`/profile`}>
                 Profile
               </Typography>
             </MenuItem>

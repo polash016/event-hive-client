@@ -58,6 +58,7 @@ const ImageSlider = ({
       <Image
         src={images[currentIndex]?.imageUrl || assets.images.no_images}
         alt={`Slide ${currentIndex + 1}`}
+        sizes="fit"
         layout="fill"
         objectFit="cover"
       />

@@ -19,7 +19,7 @@ const LoginSuccess = () => {
     if (accessToken) {
       storeUserInfo(accessToken);
       console.log("User logged in successfully:", accessToken);
-      setAccessToken(accessToken, { redirect: "/dashboard" });
+      setAccessToken(accessToken, { redirect: "/" });
     } else if (error) {
       // Handle the error case
       console.error("Error during login:", error);
